@@ -6623,6 +6623,20 @@ setInterval(async () => {
   } catch (e) {}
 }, 4000);
 
+// ==================== 日期时间辅助函数 ====================
+function addDaysStr(dateStr, days) {
+  const parts = dateStr.split('-').map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2] + days);
+  return `${d.getFullYear()}-${getPad2(d.getMonth() + 1)}-${getPad2(d.getDate())}`;
+}
+
+function addHoursStr(dtStr, hours) {
+  const clean = dtStr.replace(' ', 'T') + (dtStr.length === 16 ? ':00' : '');
+  const d = new Date(clean);
+  d.setHours(d.getHours() + hours);
+  return `${d.getFullYear()}-${getPad2(d.getMonth() + 1)}-${getPad2(d.getDate())} ${getPad2(d.getHours())}:${getPad2(d.getMinutes())}`;
+}
+  
 function refreshClockDisplay() {
   const clockEl = document.getElementById('realtime-clock');
   if (clockEl) {
