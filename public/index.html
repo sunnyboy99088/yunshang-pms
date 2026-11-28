@@ -1361,6 +1361,10 @@
       <div style="margin-top:14px;border-top:1px solid #E2E8F0;padding-top:12px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
           <div style="font-weight:700;font-size:13px;">办理入住顺便租借外设（一次可选多种）</div>
+          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
+            <input type="checkbox" id="ciWaivePeriRent" style="width:16px;height:16px;">
+            收银员酌情免外设租金
+          </label>
         </div>
         <div class="filter-bar" id="ciPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
         <div id="ciPeripheralPicker" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
@@ -1387,6 +1391,10 @@
       <div style="border-top:1px solid #E2E8F0;padding-top:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
           <div style="font-weight:700;font-size:13px;">按分类展示</div>
+          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
+            <input type="checkbox" id="pmWaiveRent" style="width:16px;height:16px;">
+            收银员酌情免租金
+          </label>
         </div>
         <div class="filter-bar" id="pmPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
         <div id="pmMultiRentList" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
@@ -1889,6 +1897,15 @@
 const SYS_NOW_STR = '2026-11-26 05:05';
 const SYS_TODAY_STR = '2026-11-26';
 const SYS_NOW_MS = new Date('2026-11-26T05:05:00').getTime();
+
+const SYS_NOW_STR = new Date().toLocaleString('sv-SE', {
+  timeZone: 'Asia/Shanghai',
+  hour12: false
+}).replace(/\//g, '-');
+
+const SYS_TODAY_STR = SYS_NOW_STR.slice(0, 10);
+
+const SYS_NOW_MS = Date.now();
 
 // 4:3 默认外设插画 SVG 生成器
 function getBuiltInPeriSvg(category = '鼠标', large = false) {
