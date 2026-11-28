@@ -3582,8 +3582,8 @@ function openSwapRoomModal(roomId) {
   document.getElementById('swSpecialOnlineRefund').checked = false;
 
   const totalDays = s.stayType === 'hour' ? 1 : Math.max(1, s.days || 1);
-  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T14:00:00');
-  const todayDate = new Date(SYS_TODAY_STR + 'T14:00:00');
+  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T12:00:00');
+  const todayDate = new Date(SYS_TODAY_STR + 'T12:00:00');
   let autoUsed = Math.max(0, Math.round((todayDate - inDate) / 86400000));
   if (autoUsed >= totalDays) autoUsed = Math.max(0, totalDays - 1);
 
