@@ -1886,29 +1886,6 @@
   </div>
 </div>
 
-<!-- ==================== [新增] 弹窗17：外设报损强制填写故障说明弹窗 ==================== -->
-<div class="modal-backdrop" id="peripheralDamageModal">
-  <div class="modal-box" style="max-width:460px;">
-    <div class="modal-header">
-      <span>外设损坏报损登记（必填故障说明）</span>
-      <button class="modal-close" onclick="closeModal('peripheralDamageModal')">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="alert-box alert-danger" id="periDamageInfoBox"></div>
-      <div class="form-grid" style="grid-template-columns:1fr;">
-        <div class="form-group">
-          <label class="form-label">外设故障说明 *（强制填写，不可为空）</label>
-          <textarea id="periDamageFaultInput" rows="3" placeholder="请详细描述故障现象，例如：左键连击失灵 / 滚轮编码器损坏 / 麦克风无声 / 线材破损..."></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeModal('peripheralDamageModal')">取消</button>
-      <button class="btn-danger" onclick="submitPeripheralDamageModal()">确认提交报损</button>
-    </div>
-  </div>
-</div>
-  
 <script>
 
 const SYS_NOW_STR = new Date().toLocaleString('sv-SE', {
@@ -2060,7 +2037,7 @@ function buildInitialPeripherals() {
 let state = {
   isLoggedIn: false,
   role: 'cashier',
-  currentUserLabel: '收银员：张悦',
+  currentUserLabel: '收银员：测试',
   currentPage: 'rooms',
   roomFilter: 'ALL',
   periCategoryFilter: 'ALL',
@@ -2069,11 +2046,8 @@ let state = {
   cafePeriCategoryFilter: 'ALL',
   periSearchQuery: '',
   periFlowTab: 'borrow',
-  periFlowPageSize: 10,
-  periBorrowPage: 1,
-  periStockPage: 1,
   currentShiftName: '早班',
-  currentCashier: '张悦',
+  currentCashier: '测试',
   policeAuto: {
     enabled: true,
     autoOnOpen: true,
@@ -2124,7 +2098,6 @@ let state = {
     transferDir: 'next',
     auditRejectLedgerId: '',
     dmgToFactoryId: '',
-    pendingDamageCtx: null,
     newPeriUploadedImg: '',
     editPeriUploadedImg: ''
   }
@@ -3520,66 +3493,16 @@ function handleRoomPeripheralAction(idx, type) {
       amount: 0,
       operator: state.currentUserLabel
     });
-    state.periBorrowPage = 1;
     item.qty -= qty;
     if (item.qty <= 0) room.stay.peripherals.splice(idx, 1);
     reconcileAllPeripherals();
     showToast(`已归还 ${qty} 件【${item.name}】，剩余 ${Math.max(0, item.qty)} 件继续在借`, 'success');
-    renderPeripheralModalContent();
-    renderAll();
   } else {
-    // [修改] 点报损后不再直接提交，而是弹出强制填写“外设故障说明”的弹窗
-    openPeripheralDamageModal({
-      mode: 'room_modal',
-      roomId: room.id,
-      idx,
-      qty,
-      periId: item.periId,
-      periName: item.name,
-      sourceLabel: `酒店 ${room.id}房`,
-      guestName: room.stay.guestName
-    });
-  }
-}
-
-// [新增] 打开外设报损强制填写故障说明弹窗
-function openPeripheralDamageModal(ctx) {
-  state.modalCtx.pendingDamageCtx = ctx;
-  document.getElementById('periDamageInfoBox').innerHTML = `
-    报损外设：<strong>${ctx.periName}</strong> · 数量：<strong>${ctx.qty} 件</strong><br>
-    来源位置：<strong>${ctx.sourceLabel}</strong>（客人：${ctx.guestName} · 报损不扣押金）
-  `;
-  document.getElementById('periDamageFaultInput').value = '';
-  openModal('peripheralDamageModal');
-  setTimeout(() => {
-    document.getElementById('periDamageFaultInput')?.focus();
-  }, 60);
-}
-
-// [新增] 校验并提交外设报损（强制故障说明非空校验，写入报损清单与报损流水）
-function submitPeripheralDamageModal() {
-  const ctx = state.modalCtx.pendingDamageCtx;
-  if (!ctx) return;
-
-  const faultDesc = document.getElementById('periDamageFaultInput').value.trim();
-  if (!faultDesc) {
-    showToast('必须填写外设故障说明，未填写无法提交报损！', 'error');
-    document.getElementById('periDamageFaultInput')?.focus();
-    return;
-  }
-
-  if (ctx.mode === 'room_modal') {
-    const room = state.rooms.find(r => r.id === ctx.roomId);
-    const item = room?.stay?.peripherals?.[ctx.idx];
-    if (!item) { closeModal('peripheralDamageModal'); return; }
-    const actualQty = Math.min(item.qty, ctx.qty);
-
     state.damageList.unshift({
       id: 'DMG-' + Date.now().toString().slice(-5),
       periId: item.periId,
       periName: item.name,
-      qty: actualQty,
-      faultDesc,
+      qty,
       sourceLabel: `酒店 ${room.id}房`,
       guestName: room.stay.guestName,
       time: SYS_NOW_STR,
@@ -3587,7 +3510,6 @@ function submitPeripheralDamageModal() {
       status: 'pending',
       handleNote: ''
     });
-
     state.peripheralBorrowLogs.unshift({
       id: 'PB' + Date.now(),
       time: SYS_NOW_STR,
@@ -3595,104 +3517,19 @@ function submitPeripheralDamageModal() {
       targetNo: room.id + '房',
       guestName: room.stay.guestName,
       periName: item.name,
-      qty: actualQty,
-      action: `损坏报损（不扣押金）· 故障：${faultDesc}`,
+      qty,
+      action: '损坏报损（不扣押金）',
       amount: 0,
       operator: state.currentUserLabel
     });
-
-    item.qty -= actualQty;
-    if (item.qty <= 0) room.stay.peripherals.splice(ctx.idx, 1);
-    state.periBorrowPage = 1;
+    item.qty -= qty;
+    if (item.qty <= 0) room.stay.peripherals.splice(idx, 1);
     reconcileAllPeripherals();
-    closeModal('peripheralDamageModal');
-    showToast(`已登记报损 ${actualQty} 件【${item.name}】（故障：${faultDesc}），已加入外设报损清单`, 'warn');
-    renderPeripheralModalContent();
-    renderAll();
-  } else if (ctx.mode === 'board_key') {
-    const key = ctx.key;
-    if (key.startsWith('hotel_')) {
-      const parts = key.split('_');
-      const roomId = parts[1];
-      const idx = parseInt(parts[2], 10);
-      const room = state.rooms.find(r => r.id === roomId);
-      const item = room?.stay?.peripherals?.[idx];
-      if (!item) { closeModal('peripheralDamageModal'); return; }
-      const actualQty = Math.min(item.qty, ctx.qty);
-
-      state.damageList.unshift({
-        id: 'DMG-' + Date.now().toString().slice(-5),
-        periId: item.periId,
-        periName: item.name,
-        qty: actualQty,
-        faultDesc,
-        sourceLabel: `酒店 ${room.id}房`,
-        guestName: room.stay.guestName,
-        time: SYS_NOW_STR,
-        operator: state.currentUserLabel,
-        status: 'pending',
-        handleNote: ''
-      });
-      state.peripheralBorrowLogs.unshift({
-        id: 'PB' + Date.now(),
-        time: SYS_NOW_STR,
-        targetType: '酒店',
-        targetNo: room.id + '房',
-        guestName: room.stay.guestName,
-        periName: item.name,
-        qty: actualQty,
-        action: `损坏报损（不扣押金）· 故障：${faultDesc}`,
-        amount: 0,
-        operator: state.currentUserLabel
-      });
-      item.qty -= actualQty;
-      if (item.qty <= 0) room.stay.peripherals.splice(idx, 1);
-      state.periBorrowPage = 1;
-      reconcileAllPeripherals();
-      closeModal('peripheralDamageModal');
-      showToast(`已报损 ${room.id}房 ${actualQty} 件【${item.name}】（故障：${faultDesc}）`, 'warn');
-      renderAll();
-    } else if (key.startsWith('cafe_')) {
-      const cfId = key.replace('cafe_', '');
-      const idx = state.cafeRentals.findIndex(c => c.id === cfId);
-      if (idx === -1) { closeModal('peripheralDamageModal'); return; }
-      const cf = state.cafeRentals[idx];
-      const actualQty = Math.min(cf.qty, ctx.qty);
-
-      state.damageList.unshift({
-        id: 'DMG-' + Date.now().toString().slice(-5),
-        periId: cf.periId,
-        periName: cf.periName,
-        qty: actualQty,
-        faultDesc,
-        sourceLabel: `网吧 ${cf.machineNo}机`,
-        guestName: cf.guestName,
-        time: SYS_NOW_STR,
-        operator: state.currentUserLabel,
-        status: 'pending',
-        handleNote: ''
-      });
-      state.peripheralBorrowLogs.unshift({
-        id: 'PB' + Date.now(),
-        time: SYS_NOW_STR,
-        targetType: '网吧',
-        targetNo: cf.machineNo + '机',
-        guestName: cf.guestName,
-        periName: cf.periName,
-        qty: actualQty,
-        action: `损坏报损（不扣押金）· 故障：${faultDesc}`,
-        amount: 0,
-        operator: state.currentUserLabel
-      });
-      cf.qty -= actualQty;
-      if (cf.qty <= 0) state.cafeRentals.splice(idx, 1);
-      state.periBorrowPage = 1;
-      reconcileAllPeripherals();
-      closeModal('peripheralDamageModal');
-      showToast(`已报损网吧 ${cf.machineNo}机 ${actualQty} 件【${cf.periName}】（故障：${faultDesc}）`, 'warn');
-      renderAll();
-    }
+    showToast(`已报损 ${qty} 件【${item.name}】（不扣押金，剩余 ${Math.max(0, item.qty)} 件仍在借），已加入报损清单`, 'warn');
   }
+
+  renderPeripheralModalContent();
+  renderAll();
 }
 
 function addMultiPeripheralToRoom() {
@@ -4272,8 +4109,8 @@ function renderPeripheralsPage() {
     <!-- 报损清单 -->
     <div class="card" style="margin-bottom:16px;border-left:4px solid #DC2626;">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-        <div style="font-weight:700;font-size:15px;">外设报损清单（待处理 ${state.damageList.length} 条 · 不扣押金）</div>
-        <span style="font-size:12px;color:#64748B;">管理员可对报损记录选择【报损修复】或【返厂维修】处理后，该记录将自动从报损清单移除</span>
+        <div style="font-weight:700;font-size:15px;">外设报损清单（共 ${state.damageList.length} 条 · 不扣押金）</div>
+        <span style="font-size:12px;color:#64748B;">管理员可对报损记录选择【报损修复】或【返厂维修】</span>
       </div>
       <div class="table-wrap">
         <table>
@@ -4284,30 +4121,37 @@ function renderPeripheralsPage() {
               <th>外设图示/名称</th>
               <th>报损数量</th>
               <th>时间</th>
-              <th>外设故障说明</th>
+              <th>状态</th>
               <th>管理员处理</th>
             </tr>
           </thead>
           <tbody>
-            ${state.damageList.length ? state.damageList.map(d => `
-              <tr>
-                <td><strong>${d.id}</strong></td>
-                <td>${d.sourceLabel} · ${d.guestName}</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    ${renderPeriImage4x3Html(d.periId, 'xs')}
-                    <strong>${d.periName}</strong>
-                  </div>
-                </td>
-                <td><span class="badge badge-overdue">${d.qty} 件</span></td>
-                <td>${formatFullDateTimeStr(d.time)}</td>
-                <td style="white-space:normal;min-width:160px;max-width:260px;color:#991B1B;font-weight:500;">${d.faultDesc || '未填写说明'}</td>
-                <td style="display:flex;gap:6px;flex-wrap:wrap;">
-                  <button class="btn-success btn-sm" ${isAdmin ? '' : 'disabled'} onclick="repairDamagedItem('${d.id}')">报损修复</button>
-                  <button class="btn-warning btn-sm" ${isAdmin ? '' : 'disabled'} onclick="openDamageToFactoryModal('${d.id}')">返厂维修</button>
-                </td>
+            ${state.damageList.length ? state.damageList.map(d => {
+              let stBadge = '<span class="badge badge-overdue">待处理</span>';
+              if (d.status === 'repaired') stBadge = `<span class="badge badge-free">已报损修复 (${d.handleNote || ''})</span>`;
+              if (d.status === 'factory') stBadge = `<span class="badge badge-repair">已转返厂维修 (${d.handleNote || ''})</span>`;
+              return `
+                <tr>
+                  <td><strong>${d.id}</strong></td>
+                  <td>${d.sourceLabel} · ${d.guestName}</td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      ${renderPeriImage4x3Html(d.periId, 'xs')}
+                      <strong>${d.periName}</strong>
+                    </div>
+                  </td>
+                  <td><span class="badge badge-overdue">${d.qty} 件</span></td>
+                  <td>${formatFullDateTimeStr(d.time)}</td>
+                  <td>${stBadge}</td>
+                  <td style="display:flex;gap:6px;flex-wrap:wrap;">
+                    ${d.status === 'pending' ? `
+                      <button class="btn-success btn-sm" ${isAdmin ? '' : 'disabled'} onclick="repairDamagedItem('${d.id}')">报损修复</button>
+                      <button class="btn-warning btn-sm" ${isAdmin ? '' : 'disabled'} onclick="openDamageToFactoryModal('${d.id}')">返厂维修</button>
+                    ` : '—'}
+                  </td>
                 </tr>
-            `).join('') : '<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:16px;">当前暂无待处理的外设报损记录</td></tr>'}
+              `;
+            }).join('') : '<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:16px;">暂无报损记录</td></tr>'}
           </tbody>
         </table>
       </div>
@@ -4568,41 +4412,34 @@ function deletePeripheralItem(periId) {
 
 function repairDamagedItem(dmgId) {
   if (state.role !== 'admin') { showToast('仅管理员可处理报损清单', 'error'); return; }
-  // [修改] 查找报损记录并在修复后立即从 state.damageList 外设报损清单中移除
-  const dmgIdx = state.damageList.findIndex(d => d.id === dmgId);
-  if (dmgIdx === -1) return;
-  const dmg = state.damageList[dmgIdx];
+  const dmg = state.damageList.find(d => d.id === dmgId);
+  if (!dmg || dmg.status !== 'pending') return;
   const peri = state.peripherals.find(p => p.id === dmg.periId);
-
-  // [修改] 从外设报损清单移除，释放报损占用并自动恢复可借库存
-  state.damageList.splice(dmgIdx, 1);
+  dmg.status = 'repaired';
+  dmg.handleNote = `已修复 +${dmg.qty}件`;
   reconcileAllPeripherals();
-
   if (peri) {
     state.peripheralStockLogs.unshift({
       id: 'PS' + Date.now(),
       time: SYS_NOW_STR,
       periName: peri.name,
-      action: `报损修复完成 (${dmg.id} · ${dmg.qty}件恢复可借 · 原故障：${dmg.faultDesc || '无'})`,
+      action: `报损修复 (${dmg.id} · ${dmg.qty}件恢复可借)`,
       deltaQty: 0,
       totalAfter: peri.total,
       operator: state.currentUserLabel
     });
-    // [新增] 新增库存变更流水后重置到第 1 页
-    state.periStockPage = 1;
   }
-  showToast(`报损单 ${dmgId} 已完成【报损修复】并从报损清单移除，${dmg.qty} 件恢复可借`, 'success');
-  renderAll();
+  showToast(`报损单 ${dmgId} 已完成【报损修复】，${dmg.qty} 件恢复可借`, 'success');
+  renderPeripheralsPage();
 }
 
 function openDamageToFactoryModal(dmgId) {
   if (state.role !== 'admin') { showToast('仅管理员可转返厂维修', 'error'); return; }
   const dmg = state.damageList.find(d => d.id === dmgId);
-  if (!dmg) return;
+  if (!dmg || dmg.status !== 'pending') return;
   state.modalCtx.dmgToFactoryId = dmgId;
   document.getElementById('dmgToFactoryInfoBox').innerHTML = `报损单 <strong>${dmg.id}</strong> · 外设：<strong>${dmg.periName}</strong> · 数量：<strong>${dmg.qty} 件</strong>`;
-  // [修改] 自动预填报损时登记的故障说明，方便管理员核对或补充
-  document.getElementById('dmgFactoryFaultInput').value = dmg.faultDesc || '';
+  document.getElementById('dmgFactoryFaultInput').value = '';
   document.getElementById('dmgFactoryContactInput').value = '';
   document.getElementById('dmgFactoryAddressInput').value = '';
   openModal('damageToFactoryModal');
@@ -4610,18 +4447,16 @@ function openDamageToFactoryModal(dmgId) {
 
 function submitDamageToFactoryRepair() {
   if (state.role !== 'admin') return;
-  // [修改] 查找报损记录，转入售后维修中后立即从 state.damageList 外设报损清单移除
-  const dmgIdx = state.damageList.findIndex(d => d.id === state.modalCtx.dmgToFactoryId);
-  if (dmgIdx === -1) return;
-  const dmg = state.damageList[dmgIdx];
+  const dmg = state.damageList.find(d => d.id === state.modalCtx.dmgToFactoryId);
+  if (!dmg || dmg.status !== 'pending') return;
   const fault = document.getElementById('dmgFactoryFaultInput').value.trim();
   const contact = document.getElementById('dmgFactoryContactInput').value.trim();
   const address = document.getElementById('dmgFactoryAddressInput').value.trim();
   if (!fault) { showToast('请填写故障原因', 'error'); return; }
   if (!contact) { showToast('请填写售后联系人或公司联系电话', 'error'); return; }
 
-  // [修改] 从外设报损清单移除，转入售后维修中清单
-  state.damageList.splice(dmgIdx, 1);
+  dmg.status = 'factory';
+  dmg.handleNote = `返厂维修(${contact})`;
 
   state.repairItems.unshift({
     id: 'RP' + Date.now(),
@@ -4642,23 +4477,20 @@ function submitDamageToFactoryRepair() {
       id: 'PS' + Date.now(),
       time: SYS_NOW_STR,
       periName: peri.name,
-      action: `报损转返厂维修 (${dmg.id} · ${dmg.qty}件 · ${fault} · ${contact})`,
+      action: `报损转返厂维修 (${dmg.qty}件 · ${fault} · ${contact})`,
       deltaQty: 0,
       totalAfter: peri.total,
       operator: state.currentUserLabel
     });
-    // [新增] 新增库存变更流水后重置到第 1 页
-    state.periStockPage = 1;
   }
 
   closeModal('damageToFactoryModal');
-  showToast(`已将 ${dmg.qty} 件【${dmg.periName}】转入售后维修中，并从报损清单移除`, 'success');
-  renderAll();
+  showToast(`已将 ${dmg.qty} 件【${dmg.periName}】转入售后维修中`, 'success');
+  renderPeripheralsPage();
 }
 
 function setPeriCategoryFilter(cat) {
-function setPeriFlowTab(tab) {
-  state.periFlowTab = tab;
+  state.periCategoryFilter = cat;
   renderPeripheralsPage();
 }
 
@@ -4672,63 +4504,10 @@ function setPeriFlowTab(tab) {
   renderPeripheralsPage();
 }
 
-// [新增] 切换租借/归还/报损流水 或 库存变更流水 的当前页码
-function changePeriFlowPage(flowType, targetPage) {
-  const pageSize = state.periFlowPageSize || 10;
-  if (flowType === 'borrow') {
-    const totalPages = Math.max(1, Math.ceil(state.peripheralBorrowLogs.length / pageSize));
-    state.periBorrowPage = Math.max(1, Math.min(totalPages, targetPage));
-  } else {
-    const totalPages = Math.max(1, Math.ceil(state.peripheralStockLogs.length / pageSize));
-    state.periStockPage = Math.max(1, Math.min(totalPages, targetPage));
-  }
-  renderPeripheralFlowBody();
-}
-
-// [新增] 通用分页控制栏渲染辅助函数（每页 10 条）
-function renderFlowPaginationBar(flowType, totalItems, currentPage, pageSize) {
-  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const safePage = Math.max(1, Math.min(totalPages, currentPage));
-  const startNo = totalItems === 0 ? 0 : (safePage - 1) * pageSize + 1;
-  const endNo = Math.min(totalItems, safePage * pageSize);
-
-  let pageBtnsHtml = '';
-  for (let p = 1; p <= totalPages; p++) {
-    pageBtnsHtml += `
-      <button type="button"
-        class="${p === safePage ? 'btn-primary' : 'btn-secondary'} btn-sm"
-        style="min-width:32px;padding:0 8px;"
-        onclick="changePeriFlowPage('${flowType}', ${p})">${p}</button>
-    `;
-  }
-
-  return `
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid #E2E8F0;">
-      <div style="font-size:12px;color:#64748B;">
-        共 <strong>${totalItems}</strong> 条记录 · 每页 <strong>${pageSize}</strong> 条 · 当前显示第 <strong>${startNo}-${endNo}</strong> 条（第 <strong>${safePage}/${totalPages}</strong> 页）
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-        <button type="button" class="btn-secondary btn-sm" ${safePage <= 1 ? 'disabled' : ''} onclick="changePeriFlowPage('${flowType}', ${safePage - 1})">上一页</button>
-        ${pageBtnsHtml}
-        <button type="button" class="btn-secondary btn-sm" ${safePage >= totalPages ? 'disabled' : ''} onclick="changePeriFlowPage('${flowType}', ${safePage + 1})">下一页</button>
-      </div>
-    </div>
-  `;
-}
-  
 function renderPeripheralFlowBody() {
   const el = document.getElementById('peripheralFlowBody');
   if (!el) return;
-  const pageSize = state.periFlowPageSize || 10;
-  
   if (state.periFlowTab === 'borrow') {
-    // [修改] 对租借/归还/报损流水按每页 10 条进行切片分页渲染
-    const totalItems = state.peripheralBorrowLogs.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-    state.periBorrowPage = Math.max(1, Math.min(totalPages, state.periBorrowPage || 1));
-    const startIdx = (state.periBorrowPage - 1) * pageSize;
-    const pageRows = state.peripheralBorrowLogs.slice(startIdx, startIdx + pageSize);
-    
     el.innerHTML = `
       <div class="table-wrap">
         <table>
@@ -4756,20 +4535,12 @@ function renderPeripheralFlowBody() {
                 <td>${log.amount > 0 ? '¥' + log.amount : '¥0'}</td>
                 <td>${log.operator}</td>
               </tr>
-            `).join('') : '<tr><td colspan="8" style="text-align:center;color:#94A3B8;padding:18px;">暂无租借/归还/报损流水记录</td></tr>'}
+            `).join('')}
           </tbody>
         </table>
       </div>
-      ${renderFlowPaginationBar('borrow', totalItems, state.periBorrowPage, pageSize)}
     `;
   } else {
-    // [修改] 对库存变更流水按每页 10 条进行切片分页渲染
-    const totalItems = state.peripheralStockLogs.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-    state.periStockPage = Math.max(1, Math.min(totalPages, state.periStockPage || 1));
-    const startIdx = (state.periStockPage - 1) * pageSize;
-    const pageRows = state.peripheralStockLogs.slice(startIdx, startIdx + pageSize);
-    
     el.innerHTML = `
       <div class="table-wrap">
         <table>
@@ -4784,20 +4555,19 @@ function renderPeripheralFlowBody() {
             </tr>
           </thead>
           <tbody>
-            ${pageRows.length ? pageRows.map(log => `
+            ${state.peripheralStockLogs.map(log => `
               <tr>
                 <td>${formatFullDateTimeStr(log.time)}</td>
                 <td><strong>${log.periName}</strong></td>
-                <td style="white-space:normal;max-width:300px;">${log.action}</td>
+                <td>${log.action}</td>
                 <td>${log.deltaQty > 0 ? '<span class="badge badge-free">+' + log.deltaQty + ' 件</span>' : log.deltaQty < 0 ? '<span class="badge badge-overdue">' + log.deltaQty + ' 件</span>' : '<span class="badge badge-cleaning">0 件</span>'}</td>
                 <td><strong>${log.totalAfter} 件</strong></td>
                 <td>${log.operator}</td>
               </tr>
-            `).join('') : '<tr><td colspan="6" style="text-align:center;color:#94A3B8;padding:18px;">暂无库存变更流水记录</td></tr>'}
+            `).join('')}
           </tbody>
         </table>
       </div>
-      ${renderFlowPaginationBar('stock', totalItems, state.periStockPage, pageSize)}
     `;
   }
 }
@@ -4869,32 +4639,70 @@ function quickDamageBorrowed(key) {
     const item = room?.stay?.peripherals?.[idx];
     if (!item) return;
     const actualQty = Math.min(item.qty, reqQty);
-    // [修改] 在借明细看板点击报损时，同样打开强制填写“外设故障说明”的弹窗
-    openPeripheralDamageModal({
-      mode: 'board_key',
-      key,
-      qty: actualQty,
+    state.damageList.unshift({
+      id: 'DMG-' + Date.now().toString().slice(-5),
       periId: item.periId,
       periName: item.name,
+      qty: actualQty,
       sourceLabel: `酒店 ${room.id}房`,
-      guestName: room.stay.guestName
+      guestName: room.stay.guestName,
+      time: SYS_NOW_STR,
+      operator: state.currentUserLabel,
+      status: 'pending',
+      handleNote: ''
     });
+    state.peripheralBorrowLogs.unshift({
+      id: 'PB' + Date.now(),
+      time: SYS_NOW_STR,
+      targetType: '酒店',
+      targetNo: room.id + '房',
+      guestName: room.stay.guestName,
+      periName: item.name,
+      qty: actualQty,
+      action: '损坏报损（不扣押金）',
+      amount: 0,
+      operator: state.currentUserLabel
+    });
+    item.qty -= actualQty;
+    if (item.qty <= 0) room.stay.peripherals.splice(idx, 1);
+    reconcileAllPeripherals();
+    showToast(`已报损 ${room.id}房 ${actualQty} 件【${item.name}】（不扣押金）`, 'warn');
+    renderAll();
   } else if (key.startsWith('cafe_')) {
     const cfId = key.replace('cafe_', '');
     const idx = state.cafeRentals.findIndex(c => c.id === cfId);
     if (idx === -1) return;
     const cf = state.cafeRentals[idx];
     const actualQty = Math.min(cf.qty, reqQty);
-    // [修改] 在借明细看板点击网吧外设报损时，同样打开强制填写“外设故障说明”的弹窗
-    openPeripheralDamageModal({
-      mode: 'board_key',
-      key,
-      qty: actualQty,
+    state.damageList.unshift({
+      id: 'DMG-' + Date.now().toString().slice(-5),
       periId: cf.periId,
       periName: cf.periName,
+      qty: actualQty,
       sourceLabel: `网吧 ${cf.machineNo}机`,
-      guestName: cf.guestName
+      guestName: cf.guestName,
+      time: SYS_NOW_STR,
+      operator: state.currentUserLabel,
+      status: 'pending',
+      handleNote: ''
     });
+    state.peripheralBorrowLogs.unshift({
+      id: 'PB' + Date.now(),
+      time: SYS_NOW_STR,
+      targetType: '网吧',
+      targetNo: cf.machineNo + '机',
+      guestName: cf.guestName,
+      periName: cf.periName,
+      qty: actualQty,
+      action: '损坏报损（不扣押金）',
+      amount: 0,
+      operator: state.currentUserLabel
+    });
+    cf.qty -= actualQty;
+    if (cf.qty <= 0) state.cafeRentals.splice(idx, 1);
+    reconcileAllPeripherals();
+    showToast(`已报损网吧 ${cf.machineNo}机 ${actualQty} 件【${cf.periName}】（不扣押金）`, 'warn');
+    renderAll();
   }
 }
 
