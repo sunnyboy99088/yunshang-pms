@@ -992,7 +992,7 @@
       </div>
       <div>
         <div class="brand-title">蚂蚁电竞酒店</div>
-        <div class="brand-sub">酒店PMS + 电竞馆</div>
+        <div class="brand-sub">酒店PMS + 电竞馆 · 外设租赁</div>
       </div>
     </div>
 
@@ -1022,7 +1022,7 @@
       </button>
       <button class="nav-item" data-page="audit" onclick="switchPage('audit')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        管理员夜审核查
+        夜审核查
       </button>
       <button class="nav-item" data-page="pricing" onclick="switchPage('pricing')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -1093,7 +1093,7 @@
         <div class="card" style="margin-bottom:16px;">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
             <div>
-              <div style="font-weight:700;font-size:15px;">本班营业与开房/换房/续住流水（线下在前，线上在后）</div>
+              <div style="font-weight:700;font-size:15px;">本班营业与开房/换房/续住流水</div>
               <div style="font-size:12px;color:#64748B;" id="handoverMetaInfo"></div>
             </div>
             <button class="btn-primary" onclick="confirmShiftHandover()">确认交班并推送管理员审核</button>
@@ -1104,6 +1104,7 @@
                 <tr>
                   <th>房号/机号</th>
                   <th>客人姓名</th>
+                  <th>身份证号码</th>
                   <th>入账渠道</th>
                   <th>业务明细</th>
                   <th>实收/退差金额</th>
@@ -1149,8 +1150,8 @@
               <label class="form-label">选择班次</label>
               <select id="statShiftSelect" onchange="renderStatsPage()">
                 <option value="ALL">全部班次</option>
-                <option value="早班">早班 (08:00-20:00)</option>
-                <option value="夜班">夜班 (20:00-08:00)</option>
+                <option value="早班">早班 (09:00-21:00)</option>
+                <option value="夜班">夜班 (21:00-09:00)</option>
               </select>
             </div>
           </div>
@@ -1194,7 +1195,7 @@
     </button>
     <button class="m-nav-btn" data-page="cafeRent" onclick="switchPage('cafeRent')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-      网吧租借
+      网吧租赁
     </button>
     <button class="m-nav-btn" data-page="handover" onclick="switchPage('handover')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5"/></svg>
@@ -1227,7 +1228,7 @@
 <div class="modal-backdrop" id="otaPoolModal">
   <div class="modal-box">
     <div class="modal-header">
-      <span>待核销线上平台订单（需手动指定房间核销）</span>
+      <span>待核销线上平台订单</span>
       <button class="modal-close" onclick="closeModal('otaPoolModal')">×</button>
     </div>
     <div class="modal-body" id="otaPoolBody"></div>
@@ -1245,7 +1246,7 @@
       <div id="policeWebFetchBanner" class="alert-box alert-success" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
         <div style="flex:1;min-width:220px;">
           <strong id="policeFetchTitle">正在查询旅馆业登记网页...</strong>
-          <div id="policeFetchDesc" style="font-size:11px;margin-top:2px;">按当前房号匹配旅馆业登记网页客人信息，跳过页面脱敏小眼睛自动填入</div>
+          <div id="policeFetchDesc" style="font-size:11px;margin-top:2px;">按当前房号匹配旅馆业登记网页客人信息，自动填入</div>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="btn-success btn-sm" type="button" onclick="refetchPoliceByRoom()">重新抓取</button>
@@ -1259,7 +1260,7 @@
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">网页登记姓名</label>
-            <input type="text" id="simWebGuestName" placeholder="如：张飞">
+            <input type="text" id="simWebGuestName" placeholder="如：张三">
           </div>
           <div class="form-group">
             <label class="form-label">网页登记电话</label>
@@ -1277,18 +1278,18 @@
       </div>
 
       <div class="seg-tabs">
-        <button type="button" class="seg-tab active" id="tabPayOffline" onclick="switchCheckInPayMode('offline')">线下收款渠道（默认）</button>
+        <button type="button" class="seg-tab active" id="tabPayOffline" onclick="switchCheckInPayMode('offline')">线下收款渠道</button>
         <button type="button" class="seg-tab" id="tabPayOnline" onclick="switchCheckInPayMode('online')">线上核销平台订单</button>
       </div>
 
       <div class="form-grid">
         <div class="form-group">
-          <label class="form-label">分配入住房间号（切换即抓该房号）*</label>
+          <label class="form-label">分配入住房间号 *</label>
           <select id="ciRoomId" onchange="onCheckInRoomChange()"></select>
         </div>
         <div class="form-group">
           <label class="form-label">入住人姓名 *</label>
-          <input type="text" id="ciGuestName" placeholder="按房号自动抓取">
+          <input type="text" id="ciGuestName" placeholder="入住人姓名">
         </div>
         <div class="form-group">
           <label class="form-label">身份证号码 *</label>
@@ -1311,7 +1312,7 @@
           </select>
         </div>
         <div class="form-group" id="ciDaysGroup">
-          <label class="form-label" id="ciDaysCapLabel">入住天数（手动输入或点 - / +）</label>
+          <label class="form-label" id="ciDaysCapLabel">入住天数</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepCheckInDays(-1)">−</button>
             <input type="number" id="ciDays" class="stepper-input" min="1" max="60" value="1" oninput="onCiDaysInput()">
@@ -1331,8 +1332,8 @@
           <label class="form-label">选择线上核销平台</label>
           <select id="ciOnlinePlatform" onchange="onOnlinePlatformChange()"></select>
         </div>
-        <div class="form-group full" id="ciOnlineOrderPickerGroup" style="display:none;">
-          <label class="form-label">该平台未入住订单（自动抓取 · 防重校验）</label>
+        <div class="form-group" id="ciOnlineOrderPickerGroup" style="display:none;">
+          <label class="form-label">该平台未入住订单</label>
           <select id="ciOnlineOrderSelect" onchange="onSelectPlatformOrder()"></select>
         </div>
         <div class="form-group" id="ciOnlineOrderNoGroup" style="display:none;">
@@ -1341,14 +1342,14 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" id="ciFeeLabel">线下总房费（自动计算 · 不可手动修改）</label>
+          <label class="form-label" id="ciFeeLabel">线下总房费</label>
           <input type="number" id="ciRoomFee" value="0" readonly>
         </div>
         <div class="form-group">
           <label class="form-label">收取押金（元）</label>
           <input type="number" id="ciDeposit" value="200">
         </div>
-        <div class="form-group full">
+        <div class="form-group">
           <label class="form-label">预计退房时间</label>
           <input type="text" id="ciExpectedCheckout" readonly>
         </div>
@@ -5267,6 +5268,7 @@ function renderHandoverPage() {
     <tr>
       <td><strong>${l.roomId}房</strong></td>
       <td>${l.guestName}</td>
+      <td>${l.idCard}</td>
       <td><span class="badge ${getChannelBadgeClass(l.channel)}">${l.payMode === 'offline' ? '线下·' + l.channel : '线上·' + l.channel}</span></td>
       <td>${l.desc}</td>
       <td><strong style="color:${l.fee < 0 ? '#DC2626' : '#0F172A'}">${l.fee < 0 ? '-¥' + Math.abs(l.fee) : '¥' + l.fee}</strong></td>
