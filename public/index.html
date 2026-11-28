@@ -2483,7 +2483,7 @@ function onExtDaysInput() {
   if (val > maxAllowed) {
     val = maxAllowed;
     if (room && Number(room.todayDayPrice) < Number(room.defaultDayPrice)) {
-      showToast(`今日房价(¥${room.todayDayPrice})低于默认房价(¥${room.defaultDayPrice})，续住最多可填 ${maxAllowed} 天`, 'warn');
+      showToast(`今日房价低于默认房价，续住最多可填 ${maxAllowed} 天`, 'warn');
     } else {
       showToast(`当前续住最多可填 ${maxAllowed} 天`, 'warn');
     }
