@@ -1475,7 +1475,7 @@
           <label class="form-label" id="extDaysCapLabel">续住天数*</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepExtendDays(-1)">−</button>
-            <input type="number" id="extDays" class="stepper-input" min="1" max="60" value="1" oninput="recalcExtend()">
+            <input type="number" id="extDays" class="stepper-input" min="1" max="60" value="1" oninput="onExtDaysInput()">
             <button type="button" class="stepper-btn" onclick="stepExtendDays(1)">+</button>
           </div>
         </div>
@@ -2473,6 +2473,25 @@ function clampPmItemQty(idx) {
   inp.value = isNaN(val) ? minVal : Math.max(minVal, Math.min(maxVal, val));
 }
 
+function onExtDaysInput() {
+  const room = state.rooms.find(r => r.id === state.modalCtx.extRoomId);
+  const inp = document.getElementById('extDays');
+  const maxAllowed = getEffectiveMaxCheckInDays(room);
+  inp.max = maxAllowed;
+  let val = parseInt(inp.value, 10);
+  if (isNaN(val) || val < 1) val = 1;
+  if (val > maxAllowed) {
+    val = maxAllowed;
+    if (room && Number(room.todayDayPrice) < Number(room.defaultDayPrice)) {
+      showToast(`今日房价(¥${room.todayDayPrice})低于默认房价(¥${room.defaultDayPrice})，续住最多可填 ${maxAllowed} 天`, 'warn');
+    } else {
+      showToast(`当前续住最多可填 ${maxAllowed} 天`, 'warn');
+    }
+  }
+  inp.value = val;
+  recalcExtend();
+}
+  
 function stepExtendDays(delta) {
   const room = state.rooms.find(r => r.id === state.modalCtx.extRoomId);
   const inp = document.getElementById('extDays');
