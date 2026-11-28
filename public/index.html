@@ -3823,7 +3823,7 @@ function openExtendModal(roomId) {
   document.getElementById('extDays').value = 1;
   document.getElementById('extChannel').innerHTML = state.offlineChannels.filter(c => c.enabled).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-  const isDiscountToday = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
+  const extRuleNotice = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
   const capLabel = document.getElementById('extDaysCapLabel');
   if (capLabel) {
     capLabel.textContent = extRuleNotice
