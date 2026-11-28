@@ -6469,6 +6469,7 @@ function renderAll() {
   if (!state.isLoggedIn) return;
   reconcileAllPeripherals();
   updateTopBar();
+  refreshClockDisplay();
   renderRoomsPage();
   if (state.currentPage === 'peripherals') renderPeripheralsPage();
   if (state.currentPage === 'cafeRent') renderCafeRentPage();
