@@ -3321,8 +3321,8 @@ function submitCheckIn() {
         guestName,
         periName: p.name,
         qty,
-       // action: waivePeriRent ? '借出(免租金)' : '借出',
-       // amount: itemRent,
+        action: '借出',
+        amount: '0',
         operator: state.currentUserLabel
       });
     }
