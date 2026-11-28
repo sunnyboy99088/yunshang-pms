@@ -2041,7 +2041,7 @@ function buildInitialPeripherals() {
 let state = {
   isLoggedIn: false,
   role: 'cashier',
-  currentUserLabel: '收银员：张悦',
+  currentUserLabel: '收银员：测试',
   currentPage: 'rooms',
   roomFilter: 'ALL',
   periCategoryFilter: 'ALL',
@@ -2051,19 +2051,15 @@ let state = {
   periSearchQuery: '',
   periFlowTab: 'borrow',
   currentShiftName: '早班',
-  currentCashier: '张悦',
+  currentCashier: '测试',
   policeAuto: {
     enabled: true,
     autoOnOpen: true,
     intervalSec: 3,
     skipEyeMask: true,
-    portalUrl: 'https://yn.lgy.gaj.gov.cn/hotel/guest-list'
+    portalUrl: 'https://web.ynhotel.net/room'
   },
-  policeWebRegistry: {
-    '101': { name: '赵云', idCard: '530322199803124518', phone: '13987420101', regTime: '13:26' },
-    '103': { name: '张飞', idCard: '530322199508151234', phone: '13887410103', regTime: '13:28' },
-    '107': { name: '关羽', idCard: '530322199211093312', phone: '13787430107', regTime: '13:22' }
-  },
+  policeWebRegistry: {},
   offlineChannels: [
     { id: 'wx', name: '微信收款码', enabled: true },
     { id: 'ali', name: '支付宝收款码', enabled: true },
@@ -2084,8 +2080,7 @@ let state = {
   peripheralBorrowLogs: [],
   peripheralStockLogs: [],
   onlineOrders: [],
-  // 房间价格与最大入住天数规则：
-  // todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
+  
   rooms: [],
   ledger: [],
   recoveryOrders: [],
@@ -2112,7 +2107,6 @@ let state = {
   }
 };
 
-  
 function showToast(msg, type = 'info') {
   const wrap = document.getElementById('toastWrap');
   const el = document.createElement('div');
