@@ -2037,7 +2037,80 @@ function buildInitialPeripherals() {
     active: true
   }));
 }
-  
+
+let state = {
+  isLoggedIn: false,
+  role: 'cashier',
+  currentUserLabel: '收银员：张悦',
+  currentPage: 'rooms',
+  roomFilter: 'ALL',
+  periCategoryFilter: 'ALL',
+  ciPeriCategoryFilter: 'ALL',
+  pmPeriCategoryFilter: 'ALL',
+  cafePeriCategoryFilter: 'ALL',
+  periSearchQuery: '',
+  periFlowTab: 'borrow',
+  currentShiftName: '早班',
+  currentCashier: '张悦',
+  policeAuto: {
+    enabled: true,
+    autoOnOpen: true,
+    intervalSec: 3,
+    skipEyeMask: true,
+    portalUrl: 'https://yn.lgy.gaj.gov.cn/hotel/guest-list'
+  },
+  policeWebRegistry: {
+    '101': { name: '赵云', idCard: '530322199803124518', phone: '13987420101', regTime: '13:26' },
+    '103': { name: '张飞', idCard: '530322199508151234', phone: '13887410103', regTime: '13:28' },
+    '107': { name: '关羽', idCard: '530322199211093312', phone: '13787430107', regTime: '13:22' }
+  },
+  offlineChannels: [
+    { id: 'wx', name: '微信收款码', enabled: true },
+    { id: 'ali', name: '支付宝收款码', enabled: true },
+    { id: 'cash', name: '现金', enabled: true },
+    { id: 'pos', name: 'POS刷卡/银行卡', enabled: true }
+  ],
+  otaPlatforms: [
+    { id: 'douyin', name: '抖音来客', enabled: true },
+    { id: 'meituan', name: '美团', enabled: true },
+    { id: 'ctrip', name: '携程', enabled: true },
+    { id: 'amap', name: '高德酒店', enabled: true }
+  ],
+  peripheralCategories: ['鼠标', '键盘', '耳机', '手柄', '麦克风', '外设配件'],
+  peripherals: buildInitialPeripherals(),
+  damageList: [],
+  repairItems: [],
+  cafeRentals: [],
+  peripheralBorrowLogs: [],
+  peripheralStockLogs: [],
+  onlineOrders: [],
+  // 房间价格与最大入住天数规则：
+  // todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
+  rooms: [],
+  ledger: [],
+  recoveryOrders: [],
+  handoverSnapshots: [],
+  modalCtx: {
+    ciMode: 'offline',
+    ciPresetOrderNo: '',
+    pmRoomId: '',
+    swRoomId: '',
+    swCalcResult: null,
+    extRoomId: '',
+    coRoomId: '',
+    adjPeriId: '',
+    editPeriId: '',
+    repairPeriId: '',
+    finishRepairId: '',
+    rejectHoId: '',
+    transferLedgerId: '',
+    transferDir: 'next',
+    auditRejectLedgerId: '',
+    dmgToFactoryId: '',
+    newPeriUploadedImg: '',
+    editPeriUploadedImg: ''
+  }
+};
 
   
 function showToast(msg, type = 'info') {
