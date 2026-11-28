@@ -5,4 +5,4 @@ pages_build_output_dir = "public"
 [[d1_databases]]
 binding = "DB"
 database_name = "yunshang-pms-db"
-database_id = "8327fb17-f35b-4541-bbfe-c20d228f97e6"
+database_id = "7ec9c531-0add-4222-93fb-6439e97a8276"
