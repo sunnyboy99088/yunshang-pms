@@ -3823,10 +3823,10 @@ function openExtendModal(roomId) {
   document.getElementById('extDays').value = 1;
   document.getElementById('extChannel').innerHTML = state.offlineChannels.filter(c => c.enabled).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
-  const extRuleNotice = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
+  const isDiscountToday = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
   const capLabel = document.getElementById('extDaysCapLabel');
   if (capLabel) {
-    capLabel.textContent = extRuleNotice
+    capLabel.textContent = isDiscountToday
       ? `续住天数*（今日房价低于默认房价，最大可填 ${maxDays} 天）`
       : `续住天数*（最大可填 ${maxDays} 天）`;
   }
