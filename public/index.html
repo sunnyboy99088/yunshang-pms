@@ -1472,7 +1472,7 @@
           <input type="number" id="extDailyPrice" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">续住天数 *</label>
+          <label class="form-label" id="extDaysCapLabel">续住天数*</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepExtendDays(-1)">−</button>
             <input type="number" id="extDays" class="stepper-input" min="1" max="60" value="1" oninput="recalcExtend()">
@@ -3783,14 +3783,31 @@ function openExtendModal(roomId) {
   const room = state.rooms.find(r => r.id === roomId);
   if (!room || !room.stay) return;
 
+  const maxDays = getEffectiveMaxCheckInDays(room);
+  const extDaysInp = document.getElementById('extDays');
+  extDaysInp.value = 1;
+  extDaysInp.max = maxDays;
+  
   document.getElementById('extTitle').textContent = `${roomId}房（${room.stay.guestName}）· 续住办理`;
   document.getElementById('extOrigCheckout').value = room.stay.checkoutTime;
   document.getElementById('extDailyPrice').value = room.todayDayPrice;
   document.getElementById('extDays').value = 1;
   document.getElementById('extChannel').innerHTML = state.offlineChannels.filter(c => c.enabled).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
 
+  const isDiscountToday = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
+  const capLabel = document.getElementById('extDaysCapLabel');
+  if (capLabel) {
+    capLabel.textContent = isDiscountToday
+      ? `续住天数*（今日房价低于默认房价，上限 ${maxDays} 天）`
+      : `续住天数*（最大可填 ${maxDays} 天）`;
+  }
+  
   const vs = getRoomVisualStatus(room);
   const notice = document.getElementById('extRuleNotice');
+  const priceRuleTip = isDiscountToday
+    ? `<br><strong>天数限制：</strong>当前今日房价 ¥${room.todayDayPrice} < 默认房价 ¥${room.defaultDayPrice}，续住最多可填 <strong>${maxDays}</strong> 天。`
+    : `<br><strong>天数限制：</strong>当前今日房价 ¥${room.todayDayPrice} ≥ 默认房价 ¥${room.defaultDayPrice}，续住最多可填 <strong>60</strong> 天。`;
+  
   if (vs.code === 'overdue') {
     notice.innerHTML = `<strong>欠费顺延规则：</strong>原应退房时间为 <strong>${room.stay.checkoutTime}</strong>（已超时欠费）。新退房日期严格从原应退房日 <strong>${room.stay.checkoutTime.slice(0,10)}</strong> 起算累加。`;
   } else {
@@ -3803,7 +3820,12 @@ function openExtendModal(roomId) {
 
 function recalcExtend() {
   const room = state.rooms.find(r => r.id === state.modalCtx.extRoomId);
-  const days = Math.max(1, parseInt(document.getElementById('extDays').value, 10) || 1);
+  if (!room || !room.stay) return;
+  const maxDays = getEffectiveMaxCheckInDays(room);
+  const extInp = document.getElementById('extDays');
+  extInp.max = maxDays;
+  const days = Math.max(1, Math.min(maxDays, parseInt(extInp.value, 10) || 1));
+  extInp.value = days;
   const origDate = room.stay.checkoutTime.slice(0, 10);
   const newDate = addDaysStr(origDate, days);
   document.getElementById('extNewCheckout').value = newDate + ' 14:00';
@@ -3813,7 +3835,16 @@ function recalcExtend() {
 
 function submitExtend() {
   const room = state.rooms.find(r => r.id === state.modalCtx.extRoomId);
-  const days = Math.max(1, parseInt(document.getElementById('extDays').value, 10) || 1);
+  if (!room || !room.stay) return;
+  const maxDays = getEffectiveMaxCheckInDays(room);
+  const rawDays = parseInt(document.getElementById('extDays').value, 10) || 1;
+  if (rawDays > maxDays) {
+    showToast(`续住天数(${rawDays}天)超过当前允许上限(${maxDays}天)，请调整后再提交`, 'error');
+    document.getElementById('extDays').value = maxDays;
+    recalcExtend();
+    return;
+  }
+  const days = Math.max(1, Math.min(maxDays, rawDays));
   const newCheckout = document.getElementById('extNewCheckout').value;
   const fee = parseFloat(document.getElementById('extFee').value) || 0;
   const channel = document.getElementById('extChannel').value;
