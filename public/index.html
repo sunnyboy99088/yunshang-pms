@@ -1472,7 +1472,7 @@
           <input type="number" id="extDailyPrice" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">续住天数（默认 1 天 · 可手动输入或点 - / +）*</label>
+          <label class="form-label">续住天数 *</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepExtendDays(-1)">−</button>
             <input type="number" id="extDays" class="stepper-input" min="1" max="60" value="1" oninput="recalcExtend()">
@@ -1537,7 +1537,7 @@
           <input type="number" id="newPeriPrice" value="5" min="0">
         </div>
         <div class="form-group full">
-          <label class="form-label">初始入库数量（默认 1 · 手动输入或点 - / +）*</label>
+          <label class="form-label">初始入库数量 *</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepNewPeriStock(-1)">−</button>
             <input type="number" id="newPeriStock" class="stepper-input" min="1" max="500" value="1">
@@ -1587,7 +1587,7 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">调整数量（手动输入或点 - / +）*</label>
+          <label class="form-label">调整数量 *</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepAdjStockQty(-1)">−</button>
             <input type="number" id="adjStockQty" class="stepper-input" min="1" max="500" value="1">
@@ -1618,7 +1618,7 @@
       <div class="alert-box alert-warn" id="sendRepairInfoBox"></div>
       <div class="form-grid" style="grid-template-columns:1fr;">
         <div class="form-group">
-          <label class="form-label">送修数量（手动输入或点 - / +）*</label>
+          <label class="form-label">送修数量 *</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepSendRepairQty(-1)">−</button>
             <input type="number" id="sendRepairQty" class="stepper-input" min="1" value="1">
@@ -3794,7 +3794,7 @@ function openExtendModal(roomId) {
   if (vs.code === 'overdue') {
     notice.innerHTML = `<strong>欠费顺延规则：</strong>原应退房时间为 <strong>${room.stay.checkoutTime}</strong>（已超时欠费）。新退房日期严格从原应退房日 <strong>${room.stay.checkoutTime.slice(0,10)}</strong> 起算累加。`;
   } else {
-    notice.innerHTML = `默认续住 <strong>1</strong> 天，新退房时间从原应退房时间 <strong>${room.stay.checkoutTime}</strong> 往后顺延。`;
+    notice.innerHTML = `新退房时间从原应退房时间 <strong>${room.stay.checkoutTime}</strong> 往后顺延。`;
   }
 
   recalcExtend();
