@@ -1489,7 +1489,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">本次续住房费（元）</label>
-          <input type="number" id="extFee">
+          <input type="number" id="extFee" readonly>
         </div>
       </div>
     </div>
@@ -3826,8 +3826,8 @@ function openExtendModal(roomId) {
   const isDiscountToday = Number(room.todayDayPrice) < Number(room.defaultDayPrice);
   const capLabel = document.getElementById('extDaysCapLabel');
   if (capLabel) {
-    capLabel.textContent = isDiscountToday
-      ? `续住天数*（今日房价低于默认房价，上限 ${maxDays} 天）`
+    capLabel.textContent = extRuleNotice
+      ? `续住天数*（今日房价低于默认房价，最大可填 ${maxDays} 天）`
       : `续住天数*（最大可填 ${maxDays} 天）`;
   }
   
