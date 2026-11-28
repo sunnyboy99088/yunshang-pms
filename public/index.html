@@ -2949,7 +2949,7 @@ function openCheckInModal(roomId, mode = 'offline', presetOrderNo = '') {
     : '<option value="暂无启用线下渠道">暂无启用线下渠道</option>';
 
   document.getElementById('ciOnlinePlatform').innerHTML = state.otaPlatforms.filter(p => p.enabled).map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-  document.getElementById('ciWaivePeriRent').checked = false;
+ // document.getElementById('ciWaivePeriRent').checked = false;
 
   renderCiPeripheralPicker();
 
@@ -3259,7 +3259,7 @@ function submitCheckIn() {
   const mode = state.modalCtx.ciMode;
   const deposit = parseFloat(document.getElementById('ciDeposit').value) || 0;
   const checkoutTime = document.getElementById('ciExpectedCheckout').value;
-  const waivePeriRent = document.getElementById('ciWaivePeriRent').checked;
+ // const waivePeriRent = document.getElementById('ciWaivePeriRent').checked;
 
   let channel = '';
   let orderNo = '';
