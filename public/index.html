@@ -3859,7 +3859,7 @@ function recalcExtend() {
   const newDate = addDaysStr(origDate, days);
   document.getElementById('extNewCheckout').value = newDate + ' 14:00';
   document.getElementById('extFee').value = days * room.todayDayPrice;
-  document.getElementById('extFee').readOnly = (state.role !== 'admin');
+ // document.getElementById('extFee').readOnly = (state.role !== 'admin');
 }
 
 function submitExtend() {
