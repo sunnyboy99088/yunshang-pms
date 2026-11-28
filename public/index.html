@@ -3378,7 +3378,7 @@ function openPeripheralModal(roomId) {
   const room = state.rooms.find(r => r.id === roomId);
   if (!room || !room.stay) return;
   document.getElementById('pmTitle').textContent = `${roomId}房（${room.stay.guestName}）· 外设租借/归还/报损`;
-  if (document.getElementById('pmWaiveRent')) document.getElementById('pmWaiveRent').checked = false;
+ // if (document.getElementById('pmWaiveRent')) document.getElementById('pmWaiveRent').checked = false;
   renderPeripheralModalContent();
   openModal('peripheralModal');
 }
@@ -3514,7 +3514,7 @@ function addMultiPeripheralToRoom() {
   reconcileAllPeripherals();
   const room = state.rooms.find(r => r.id === state.modalCtx.pmRoomId);
   if (!room || !room.stay) return;
-  const waiveRent = document.getElementById('pmWaiveRent')?.checked || false;
+ // const waiveRent = document.getElementById('pmWaiveRent')?.checked || false;
 
   const checked = Array.from(document.querySelectorAll('[data-pm-multi-chk]:checked'));
   if (!checked.length) {
@@ -3542,7 +3542,7 @@ function addMultiPeripheralToRoom() {
 
     const existing = room.stay.peripherals.find(x => x.periId === periId);
     if (existing) existing.qty += qty;
-    else room.stay.peripherals.push({ periId: inv.id, name: inv.name, qty, rentFee: waiveRent ? 0 : inv.rentFee, time: SYS_NOW_STR });
+    else room.stay.peripherals.push({ periId: inv.id, name: inv.name, qty, time: SYS_NOW_STR });
 
     state.peripheralBorrowLogs.unshift({
       id: 'PB' + Date.now() + '_' + inv.id,
@@ -3552,8 +3552,8 @@ function addMultiPeripheralToRoom() {
       guestName: room.stay.guestName,
       periName: inv.name,
       qty,
-      action: waiveRent ? '借出(免租金)' : '借出',
-      amount: waiveRent ? 0 : qty * inv.rentFee,
+      action: '借出',
+      amount: '0',
       operator: state.currentUserLabel
     });
     addedKinds++;
