@@ -3556,11 +3556,11 @@ function addMultiPeripheralToRoom() {
       amount: '0',
       operator: state.currentUserLabel
     });
-    addedKinds++;
+    addedKinds += qty;
   }
 
   reconcileAllPeripherals();
-  showToast(`已为 ${room.id}房 一次性借出 ${addedKinds} 种外设${waiveRent ? '（已免租金）' : ''}`, 'success');
+  showToast(`已为 ${room.id}房 一次性借出 ${addedKinds} 件外设}`, 'success');
   renderPeripheralModalContent();
   renderAll();
 }
