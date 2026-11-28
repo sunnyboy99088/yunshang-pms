@@ -1395,9 +1395,6 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeModal('peripheralModal')">关闭</button>
-    </div>
   </div>
 </div>
 
@@ -3557,7 +3554,7 @@ function addMultiPeripheralToRoom() {
 
   reconcileAllPeripherals();
   showToast(`已为 ${room.id}房 一次性借出 ${addedKinds} 件外设`, 'success');
-  renderPeripheralModalContent();
+  closeModal('peripheralModal');
   renderAll();
 }
 
