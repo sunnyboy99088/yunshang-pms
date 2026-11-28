@@ -1362,6 +1362,8 @@
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
           <div style="font-weight:700;font-size:13px;">办理入住顺便租借外设（支持按分类展示、一次租借多种外设）</div>
           <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
+            <input type="checkbox" id="ciWaivePeriRent" style="width:16px;height:16px;">
+            收银员酌情免外设租金
           </label>
         </div>
         <div class="filter-bar" id="ciPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
@@ -2951,7 +2953,7 @@ function openCheckInModal(roomId, mode = 'offline', presetOrderNo = '') {
     : '<option value="暂无启用线下渠道">暂无启用线下渠道</option>';
 
   document.getElementById('ciOnlinePlatform').innerHTML = state.otaPlatforms.filter(p => p.enabled).map(p => `<option value="${p.name}">${p.name}</option>`).join('');
-  document.getElementById('ciWaivePeriRent').checked = false;
+//  document.getElementById('ciWaivePeriRent').checked = false;
 
   renderCiPeripheralPicker();
 
@@ -3261,7 +3263,7 @@ function submitCheckIn() {
   const mode = state.modalCtx.ciMode;
   const deposit = parseFloat(document.getElementById('ciDeposit').value) || 0;
   const checkoutTime = document.getElementById('ciExpectedCheckout').value;
-  const waivePeriRent = document.getElementById('ciWaivePeriRent').checked;
+//  const waivePeriRent = document.getElementById('ciWaivePeriRent').checked;
 
   let channel = '';
   let orderNo = '';
