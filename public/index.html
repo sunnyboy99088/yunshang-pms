@@ -1360,11 +1360,7 @@
 
       <div style="margin-top:14px;border-top:1px solid #E2E8F0;padding-top:12px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
-          <div style="font-weight:700;font-size:13px;">办理入住顺便租借外设（支持按分类展示、一次租借多种外设）</div>
-          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="ciWaivePeriRent" style="width:16px;height:16px;">
-            收银员酌情免外设租金
-          </label>
+          <div style="font-weight:700;font-size:13px;">办理入住顺便租借外设（一次可选多种）</div>
         </div>
         <div class="filter-bar" id="ciPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
         <div id="ciPeripheralPicker" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
@@ -1385,21 +1381,17 @@
       <button class="modal-close" onclick="closeModal('peripheralModal')">×</button>
     </div>
     <div class="modal-body">
-      <div style="font-weight:700;font-size:13px;margin-bottom:8px;">当前房间已借外设清单（支持按数量归还或按数量报损，报损不扣押金）</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:8px;">当前房间已借外设清单（支持按数量归还或按数量报损）</div>
       <div id="pmBorrowedList" style="margin-bottom:16px;"></div>
 
       <div style="border-top:1px solid #E2E8F0;padding-top:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
-          <div style="font-weight:700;font-size:13px;">按分类展示并一次性租借多种外设</div>
-          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="pmWaiveRent" style="width:16px;height:16px;">
-            收银员酌情免租金
-          </label>
+          <div style="font-weight:700;font-size:13px;">按分类展示</div>
         </div>
         <div class="filter-bar" id="pmPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
         <div id="pmMultiRentList" style="display:flex;flex-direction:column;gap:8px;max-height:220px;overflow-y:auto;"></div>
         <div style="margin-top:10px;text-align:right;">
-          <button class="btn-primary" onclick="addMultiPeripheralToRoom()">确认批量借出外设</button>
+          <button class="btn-primary" onclick="addMultiPeripheralToRoom()">确认借出外设</button>
         </div>
       </div>
     </div>
@@ -1429,7 +1421,7 @@
           <input type="number" id="swTotalDays" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">已住天数（手动输入或点 - / +）</label>
+          <label class="form-label">已住天数</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepSwapUsedDays(-1)">−</button>
             <input type="number" id="swUsedDays" class="stepper-input" min="0" oninput="recalcSwapRoom()">
@@ -1877,12 +1869,8 @@
           <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
             <div class="peri-img-4x3 preview-lg" id="editPeriImgPreview"></div>
             <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px;">
-              <label class="btn-secondary btn-sm" style="height:36px;cursor:pointer;">
-                选择图片 / 相册上传
-                <input type="file" accept="image/*" id="editPeriGalleryInput" onchange="handleEditPeriFileUpload(event)" style="display:none;">
-              </label>
               <label class="btn-indigo-soft btn-sm" style="height:36px;cursor:pointer;">
-                手机相机拍照上传
+                选择图片 / 相册上传 / 相机拍照上传
                 <input type="file" accept="image/*" capture="environment" id="editPeriCameraInput" onchange="handleEditPeriFileUpload(event)" style="display:none;">
               </label>
             </div>
@@ -1898,9 +1886,14 @@
 </div>
 
 <script>
-const SYS_NOW_STR = '2026-11-26 05:05';
-const SYS_TODAY_STR = '2026-11-26';
-const SYS_NOW_MS = new Date('2026-11-26T05:05:00').getTime();
+const SYS_NOW_STR = new Date().toLocaleString('sv-SE', {
+  timeZone: 'Asia/Shanghai',
+  hour12: false
+}).replace(/\//g, '-');
+
+const SYS_TODAY_STR = SYS_NOW_STR.slice(0, 10);
+
+const SYS_NOW_MS = Date.now();
 
 // 4:3 默认外设插画 SVG 生成器
 function getBuiltInPeriSvg(category = '鼠标', large = false) {
@@ -3588,8 +3581,8 @@ function openSwapRoomModal(roomId) {
   document.getElementById('swSpecialOnlineRefund').checked = false;
 
   const totalDays = s.stayType === 'hour' ? 1 : Math.max(1, s.days || 1);
-  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T12:00:00');
-  const todayDate = new Date(SYS_TODAY_STR + 'T12:00:00');
+  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T14:00:00');
+  const todayDate = new Date(SYS_TODAY_STR + 'T14:00:00');
   let autoUsed = Math.max(0, Math.round((todayDate - inDate) / 86400000));
   if (autoUsed >= totalDays) autoUsed = Math.max(0, totalDays - 1);
 
