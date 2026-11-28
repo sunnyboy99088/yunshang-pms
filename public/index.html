@@ -3134,7 +3134,7 @@ function switchCheckInPayMode(mode) {
 
   const feeInput = document.getElementById('ciRoomFee');
   if (isOff) {
-    document.getElementById('ciFeeLabel').textContent = '线下总房费（按今日房价/今日钟点房价自动计算 · 不可修改）';
+    document.getElementById('ciFeeLabel').textContent = '线下总房费';
     feeInput.readOnly = true;
     document.getElementById('ciDuplicateWarn').style.display = 'none';
     document.getElementById('ciSubmitBtn').disabled = false;
