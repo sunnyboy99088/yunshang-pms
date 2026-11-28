@@ -2022,8 +2022,21 @@ function togglePeriZoomById(periId, e) {
 // 房间价格与最大入住天数规则：
 // todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
 // 生成 52 款涵盖多分类的电竞外设台账
-
-
+function buildInitialPeripherals() {
+  const catalog = [];
+  return catalog.map((item, idx) => ({
+    id: 'p' + (idx + 1),
+    name: item.name,
+    category: item.category,
+    imgUrl: '',
+    rentFee: item.rentFee,
+    total: item.total,
+    available: item.available,
+    repair: item.repair || 0,
+    damaged: item.damaged || 0,
+    active: true
+  }));
+}
 
 function showToast(msg, type = 'info') {
   const wrap = document.getElementById('toastWrap');
