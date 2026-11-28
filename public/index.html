@@ -1014,12 +1014,12 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
         前台交接班
       </button>
+      
+      <div class="nav-group-label">审核与房源管理</div>
       <button class="nav-item" data-page="stats" onclick="switchPage('stats')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         账目查询统计
       </button>
-
-      <div class="nav-group-label">审核与房源管理</div>
       <button class="nav-item" data-page="audit" onclick="switchPage('audit')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         管理员夜审核查
@@ -1034,7 +1034,7 @@
       </button>
       <button class="nav-item" data-page="settings" onclick="switchPage('settings')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        收银与平台设置
+        系统设置
       </button>
     </nav>
 
@@ -1104,6 +1104,7 @@
                 <tr>
                   <th>房号/机号</th>
                   <th>客人姓名</th>
+                  <th>身份证号码</th>
                   <th>入账渠道</th>
                   <th>业务明细</th>
                   <th>实收/退差金额</th>
@@ -1149,8 +1150,8 @@
               <label class="form-label">选择班次</label>
               <select id="statShiftSelect" onchange="renderStatsPage()">
                 <option value="ALL">全部班次</option>
-                <option value="早班">早班 (08:00-20:00)</option>
-                <option value="夜班">夜班 (20:00-08:00)</option>
+                <option value="早班">早班 (09:00-21:00)</option>
+                <option value="夜班">夜班 (21:00-09:00)</option>
               </select>
             </div>
           </div>
@@ -1173,7 +1174,7 @@
         <div id="roomManagePageContainer"></div>
       </section>
 
-      <!-- 9. 收银与平台设置 -->
+      <!-- 9. 系统设置 -->
       <section class="page-section" id="page-settings">
         <div id="settingsPageContainer"></div>
       </section>
@@ -1277,8 +1278,8 @@
       </div>
 
       <div class="seg-tabs">
-        <button type="button" class="seg-tab active" id="tabPayOffline" onclick="switchCheckInPayMode('offline')">线下收款渠道（默认）</button>
-        <button type="button" class="seg-tab" id="tabPayOnline" onclick="switchCheckInPayMode('online')">线上核销平台订单</button>
+        <button type="button" class="seg-tab active" id="tabPayOffline" onclick="switchCheckInPayMode('offline')">线下渠道</button>
+        <button type="button" class="seg-tab" id="tabPayOnline" onclick="switchCheckInPayMode('online')">线上平台订单</button>
       </div>
 
       <div class="form-grid">
@@ -1311,7 +1312,7 @@
           </select>
         </div>
         <div class="form-group" id="ciDaysGroup">
-          <label class="form-label" id="ciDaysCapLabel">入住天数（手动输入或点 - / +）</label>
+          <label class="form-label" id="ciDaysCapLabel">入住天数</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepCheckInDays(-1)">−</button>
             <input type="number" id="ciDays" class="stepper-input" min="1" max="60" value="1" oninput="onCiDaysInput()">
@@ -1348,7 +1349,7 @@
           <label class="form-label">收取押金（元）</label>
           <input type="number" id="ciDeposit" value="200">
         </div>
-        <div class="form-group full">
+        <div class="form-group">
           <label class="form-label">预计退房时间</label>
           <input type="text" id="ciExpectedCheckout" readonly>
         </div>
@@ -1384,15 +1385,13 @@
       <button class="modal-close" onclick="closeModal('peripheralModal')">×</button>
     </div>
     <div class="modal-body">
-      <div style="font-weight:700;font-size:13px;margin-bottom:8px;">当前房间已借外设清单（支持按数量归还或按数量报损，报损不扣押金）</div>
+      <div style="font-weight:700;font-size:13px;margin-bottom:8px;">当前房间已借外设清单（支持按数量归还或按数量报损）</div>
       <div id="pmBorrowedList" style="margin-bottom:16px;"></div>
 
       <div style="border-top:1px solid #E2E8F0;padding-top:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
-          <div style="font-weight:700;font-size:13px;">按分类展示并一次性租借多种外设</div>
+          <div style="font-weight:700;font-size:13px;">按分类展示（支持一次性租借多种外设）</div>
           <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;cursor:pointer;">
-            <input type="checkbox" id="pmWaiveRent" style="width:16px;height:16px;">
-            收银员酌情免租金
           </label>
         </div>
         <div class="filter-bar" id="pmPeriCategoryFilterBar" style="margin-bottom:8px;"></div>
@@ -1412,7 +1411,7 @@
 <div class="modal-backdrop" id="swapRoomModal">
   <div class="modal-box">
     <div class="modal-header">
-      <span id="swTitle">中途换房与差价核算</span>
+      <span id="swTitle">换房与差价核算</span>
       <button class="modal-close" onclick="closeModal('swapRoomModal')">×</button>
     </div>
     <div class="modal-body">
@@ -1428,7 +1427,7 @@
           <input type="number" id="swTotalDays" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">已住天数（手动输入或点 - / +）</label>
+          <label class="form-label">已住天数</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepSwapUsedDays(-1)">−</button>
             <input type="number" id="swUsedDays" class="stepper-input" min="0" oninput="recalcSwapRoom()">
@@ -1482,7 +1481,7 @@
           <input type="number" id="extDailyPrice" readonly>
         </div>
         <div class="form-group">
-          <label class="form-label">续住天数（默认 1 天 · 可手动输入或点 - / +）*</label>
+          <label class="form-label">续住天数*</label>
           <div class="stepper-group">
             <button type="button" class="stepper-btn" onclick="stepExtendDays(-1)">−</button>
             <input type="number" id="extDays" class="stepper-input" min="1" max="60" value="1" oninput="recalcExtend()">
@@ -1499,7 +1498,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">本次续住房费（元）</label>
-          <input type="number" id="extFee">
+          <input type="number" id="extFee" readonly>
         </div>
       </div>
     </div>
@@ -2020,319 +2019,7 @@ function togglePeriZoomById(periId, e) {
 }
 
 // 生成 52 款涵盖多分类的电竞外设台账
-function buildInitialPeripherals() {
-  const catalog = [
-    { name: '罗技 GPW2 无线鼠标', category: '鼠标', rentFee: 10, total: 8, available: 5, repair: 1, damaged: 0 },
-    { name: '罗技 GPW5 无线鼠标', category: '鼠标', rentFee: 15, total: 8, available: 7, repair: 0, damaged: 0 },
-    { name: '卓威 EC2-CW 无线鼠标', category: '鼠标', rentFee: 10, total: 6, available: 4, repair: 0, damaged: 0 },
-    { name: '卓威 FK2-DW 无线鼠标', category: '鼠标', rentFee: 12, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: '卓威 ZA13-DW 无线鼠标', category: '鼠标', rentFee: 12, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '雷蛇 毒蝰V3 Pro 无线鼠标', category: '鼠标', rentFee: 15, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '雷蛇 炼狱蝰蛇V3 Pro', category: '鼠标', rentFee: 12, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: 'ROG 龙鳞 Ace Aim Lab', category: '鼠标', rentFee: 12, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: 'Finalmouse UltralightX', category: '鼠标', rentFee: 20, total: 3, available: 3, repair: 0, damaged: 0 },
-    { name: 'Lamzu Atlantis Mini Pro', category: '鼠标', rentFee: 8, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: 'VGN 蜻蜓 F1 Pro Max', category: '鼠标', rentFee: 5, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '迈从 A7 Ultra 无线鼠标', category: '鼠标', rentFee: 5, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: 'Wooting 60HE 磁轴键盘', category: '键盘', rentFee: 20, total: 5, available: 4, repair: 0, damaged: 0 },
-    { name: 'Wooting 80HE 磁轴键盘', category: '键盘', rentFee: 22, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: 'ROG 游侠2 98 无线键盘', category: '键盘', rentFee: 18, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: 'ROG 夜魔 NX 客制化键盘', category: '键盘', rentFee: 20, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '雷蛇 猎魂光蛛V3 竞技版', category: '键盘', rentFee: 15, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: '迈从 Ace68 磁轴键盘', category: '键盘', rentFee: 8, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '狼蛛 F75 三模机械键盘', category: '键盘', rentFee: 5, total: 10, available: 10, repair: 0, damaged: 0 },
-    { name: 'Keychron Q1 Pro 客制化', category: '键盘', rentFee: 12, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '杜伽 K310W 有线/无线键盘', category: '键盘', rentFee: 5, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: 'Cherry MX Board 3.0S', category: '键盘', rentFee: 8, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: '极度未知 飓风2 电竞耳机', category: '耳机', rentFee: 8, total: 8, available: 6, repair: 0, damaged: 0 },
-    { name: '极度未知 飓风3 无线耳机', category: '耳机', rentFee: 12, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '罗技 G PRO X 2 无线耳机', category: '耳机', rentFee: 15, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: 'ROG 棱镜 无线电竞耳机', category: '耳机', rentFee: 12, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: '赛睿 Arctis Nova Pro', category: '耳机', rentFee: 18, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '雷蛇 旋风黑鲨V2 Pro', category: '耳机', rentFee: 12, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '森海塞尔 PC38X 开放耳机', category: '耳机', rentFee: 10, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '漫步者 G5 Pro 电竞耳机', category: '耳机', rentFee: 5, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '水月雨 Blessing3 入耳监听', category: '耳机', rentFee: 15, total: 3, available: 3, repair: 0, damaged: 0 },
-    { name: '铁三角 ATH-G1WL 无线耳机', category: '耳机', rentFee: 10, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: 'Xbox 精英二代无线手柄', category: '手柄', rentFee: 12, total: 5, available: 4, repair: 0, damaged: 0 },
-    { name: 'Xbox Series 无线手柄', category: '手柄', rentFee: 8, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '索尼 PS5 DualSense 手柄', category: '手柄', rentFee: 10, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '北通 宙斯2 光轴手柄', category: '手柄', rentFee: 8, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '飞智 八爪鱼4 旗舰手柄', category: '手柄', rentFee: 10, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '谷粒 金刚3 Pro 无线手柄', category: '手柄', rentFee: 6, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '八位堂 猎户座青春版手柄', category: '手柄', rentFee: 5, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: '舒尔 SM7dB 动圈麦克风', category: '麦克风', rentFee: 20, total: 3, available: 3, repair: 0, damaged: 0 },
-    { name: '罗德 PodMic USB 麦克风', category: '麦克风', rentFee: 15, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: 'HyperX QuadCast S 麦', category: '麦克风', rentFee: 10, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: '蓝鸟 Yeti X 专业麦克风', category: '麦克风', rentFee: 10, total: 4, available: 4, repair: 0, damaged: 0 },
-    { name: '雷蛇 魔音海妖V3 专业版', category: '麦克风', rentFee: 8, total: 5, available: 5, repair: 0, damaged: 0 },
-    { name: 'FIFINE AM8 动圈麦克风', category: '麦克风', rentFee: 5, total: 6, available: 6, repair: 0, damaged: 0 },
-    { name: 'Artisan 零号 XL 鼠标垫', category: '外设配件', rentFee: 5, total: 10, available: 10, repair: 0, damaged: 0 },
-    { name: '卓威 G-SR-SE Rouge 鼠标垫', category: '外设配件', rentFee: 5, total: 10, available: 10, repair: 0, damaged: 0 },
-    { name: '罗技 4K 无线接收器', category: '外设配件', rentFee: 5, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '雷蛇 HyperPolling 4K 接收器', category: '外设配件', rentFee: 5, total: 8, available: 8, repair: 0, damaged: 0 },
-    { name: '磁吸式鼠标充电底座', category: '外设配件', rentFee: 5, total: 10, available: 10, repair: 0, damaged: 0 },
-    { name: '伞绳航空插头连接线', category: '外设配件', rentFee: 5, total: 12, available: 12, repair: 0, damaged: 0 },
-    { name: '电竞耳机铝合金支架', category: '外设配件', rentFee: 5, total: 10, available: 10, repair: 0, damaged: 0 }
-  ];
 
-  return catalog.map((item, idx) => ({
-    id: 'p' + (idx + 1),
-    name: item.name,
-    category: item.category,
-    imgUrl: '',
-    rentFee: item.rentFee,
-    total: item.total,
-    available: item.available,
-    repair: item.repair || 0,
-    damaged: item.damaged || 0,
-    active: true
-  }));
-}
-
-let state = {
-  isLoggedIn: false,
-  role: 'cashier',
-  currentUserLabel: '收银员：张悦',
-  currentPage: 'rooms',
-  roomFilter: 'ALL',
-  periCategoryFilter: 'ALL',
-  ciPeriCategoryFilter: 'ALL',
-  pmPeriCategoryFilter: 'ALL',
-  cafePeriCategoryFilter: 'ALL',
-  periSearchQuery: '',
-  periFlowTab: 'borrow',
-  currentShiftName: '早班',
-  currentCashier: '张悦',
-  policeAuto: {
-    enabled: true,
-    autoOnOpen: true,
-    intervalSec: 3,
-    skipEyeMask: true,
-    portalUrl: 'https://yn.lgy.gaj.gov.cn/hotel/guest-list'
-  },
-  policeWebRegistry: {
-    '101': { name: '赵云', idCard: '530322199803124518', phone: '13987420101', regTime: '13:26' },
-    '103': { name: '张飞', idCard: '530322199508151234', phone: '13887410103', regTime: '13:28' },
-    '107': { name: '关羽', idCard: '530322199211093312', phone: '13787430107', regTime: '13:22' }
-  },
-  offlineChannels: [
-    { id: 'wx', name: '微信收款码', enabled: true },
-    { id: 'ali', name: '支付宝收款码', enabled: true },
-    { id: 'cash', name: '现金', enabled: true },
-    { id: 'pos', name: 'POS刷卡/银行卡', enabled: true }
-  ],
-  otaPlatforms: [
-    { id: 'douyin', name: '抖音来客', enabled: true },
-    { id: 'meituan', name: '美团', enabled: true },
-    { id: 'ctrip', name: '携程', enabled: true },
-    { id: 'amap', name: '高德酒店', enabled: true }
-  ],
-  peripheralCategories: ['鼠标', '键盘', '耳机', '手柄', '麦克风', '外设配件'],
-  peripherals: buildInitialPeripherals(),
-  damageList: [
-    {
-      id: 'DMG01',
-      periId: 'p3',
-      periName: '卓威 EC2-CW 无线鼠标',
-      qty: 1,
-      sourceLabel: '酒店 102房',
-      guestName: '刘备',
-      time: '2026-11-25 11:40',
-      operator: '收银员：张悦',
-      status: 'pending',
-      handleNote: ''
-    }
-  ],
-  repairItems: [
-    {
-      id: 'RP01',
-      periId: 'p1',
-      periName: '罗技 GPW2 无线鼠标',
-      qty: 1,
-      fault: '中键微动双击，送厂保修',
-      contact: '罗技售后陈工 13800138001',
-      address: '售后服务中心B座402',
-      sendTime: '2026-11-24 15:20',
-      operator: '管理员：李店长'
-    }
-  ],
-  cafeRentals: [
-    {
-      id: 'CF01',
-      guestName: '韩信',
-      idCard: '530302199904121139',
-      phone: '13887451120',
-      machineNo: 'A18',
-      periId: 'p1',
-      periName: '罗技 GPW2 无线鼠标',
-      qty: 2,
-      rentFee: 20,
-      deposit: 0,
-      channel: '微信收款码',
-      rentTime: '2026-11-25 12:15',
-      operator: '收银员：张悦'
-    }
-  ],
-  peripheralBorrowLogs: [
-    { id: 'PB01', time: '2026-11-25 12:15', targetType: '网吧', targetNo: 'A18机', guestName: '韩信', periName: '罗技 GPW2 无线鼠标', qty: 2, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB02', time: '2026-11-25 11:20', targetType: '酒店', targetNo: '102房', guestName: '刘备', periName: '卓威 EC2-CW 无线鼠标', qty: 2, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB03', time: '2026-11-24 14:05', targetType: '酒店', targetNo: '104房', guestName: '黄盖', periName: 'Wooting 60HE 磁轴键盘', qty: 1, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB04', time: '2026-11-24 14:10', targetType: '酒店', targetNo: '106房', guestName: '马超', periName: '极度未知 飓风2 电竞耳机', qty: 2, action: '借出', amount: 16, operator: '收银员：张悦' }
-  ],
-  peripheralStockLogs: [
-    { id: 'PS01', time: '2026-11-24 15:20', periName: '罗技 GPW2 无线鼠标', action: '送售后维修 (中键微动双击 · 罗技售后陈工 13800138001)', deltaQty: 0, totalAfter: 8, operator: '管理员：李店长' },
-    { id: 'PS02', time: '2026-11-20 09:00', periName: '全品类外设台账', action: '初始化外设库存 (52款)', deltaQty: 52, totalAfter: 52, operator: '管理员：李店长' }
-  ],
-  onlineOrders: [
-    { orderNo: 'MT202611250081', platform: '美团', guestName: '陈浩然', idCard: '530302199804121139', phone: '13708742210', roomTypeHint: '豪华双人开黑房', days: 1, bottomPrice: 248, used: false, usedRoom: '' },
-    { orderNo: 'XC202611250192', platform: '携程', guestName: '王思聪', idCard: '530381200009183312', phone: '13987498812', roomTypeHint: '五黑至尊包厢', days: 2, bottomPrice: 936, used: false, usedRoom: '' },
-    { orderNo: 'DY202611250305', platform: '抖音来客', guestName: '孙悟空', idCard: '530322199706015517', phone: '15887435517', roomTypeHint: '疾风双人电竞房', days: 2, bottomPrice: 436, used: false, usedRoom: '' },
-    { orderNo: 'GD202611250411', platform: '高德酒店', guestName: '李白', idCard: '530302200202147711', phone: '18787027711', roomTypeHint: '竞技大床房', days: 1, bottomPrice: 198, used: false, usedRoom: '' },
-    { orderNo: 'MT202611250019', platform: '美团', guestName: '刘备', idCard: '530302199605201215', phone: '13887401215', roomTypeHint: '豪华双人开黑房', days: 1, bottomPrice: 248, used: true, usedRoom: '102' }
-  ],
-  // 房间价格与最大入住天数规则：
-  // todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
-  rooms: [
-    {
-      id: '101', type: '竞技大床房',
-      todayDayPrice: 228, maxCheckInDays: 1, todayHourPrice: 88, defaultDayPrice: 228, defaultHourPrice: 88,
-      otaBottomRef: 198, status: 'free',
-      pc: { cpu: 'i5-13400F', gpu: 'RTX 4060 Ti 8G', monitor: 'HKC 27寸 2K 180Hz', ram: '32GB DDR5' },
-      stay: null
-    },
-    {
-      id: '102', type: '豪华双人开黑房',
-      todayDayPrice: 288, maxCheckInDays: 1, todayHourPrice: 118, defaultDayPrice: 288, defaultHourPrice: 118,
-      otaBottomRef: 248, status: 'occupied',
-      pc: { cpu: 'i7-13700KF', gpu: 'RTX 4070 12G', monitor: '卓威 25寸 240Hz', ram: '32GB DDR5' },
-      stay: {
-        guestName: '刘备', idCard: '530302199605201215', phone: '13887401215',
-        payMode: 'online', channel: '美团', orderNo: 'MT202611250019',
-        stayType: 'day', days: 1, fee: 248, origDailyPaid: 248, deposit: 200,
-        checkinTime: '2026-11-25 11:20', checkoutTime: '2026-11-26 12:00',
-        peripherals: [
-          { periId: 'p3', name: '卓威 EC2-CW 无线鼠标', qty: 2, rentFee: 10, time: '2026-11-25 11:20' }
-        ]
-      }
-    },
-    {
-      id: '103', type: '豪华双人开黑房',
-      todayDayPrice: 288, maxCheckInDays: 1, todayHourPrice: 118, defaultDayPrice: 288, defaultHourPrice: 118,
-      otaBottomRef: 248, status: 'free',
-      pc: { cpu: 'i7-13700KF', gpu: 'RTX 4070 12G', monitor: '卓威 25寸 240Hz', ram: '32GB DDR5' },
-      stay: null
-    },
-    {
-      id: '104', type: '三人战队开黑房',
-      todayDayPrice: 368, maxCheckInDays: 1, todayHourPrice: 158, defaultDayPrice: 368, defaultHourPrice: 158,
-      otaBottomRef: 318, status: 'occupied',
-      pc: { cpu: 'i7-14700KF', gpu: 'RTX 4070 Super', monitor: 'ROG 27寸 2K 240Hz', ram: '32GB DDR5' },
-      stay: {
-        guestName: '黄盖', idCard: '530302199708086613', phone: '18387426613',
-        payMode: 'offline', channel: '支付宝收款码', orderNo: '',
-        stayType: 'day', days: 2, fee: 736, origDailyPaid: 368, deposit: 300,
-        checkinTime: '2026-11-20 14:00', checkoutTime: '2026-11-22 12:00',
-        peripherals: [
-          { periId: 'p13', name: 'Wooting 60HE 磁轴键盘', qty: 1, rentFee: 20, time: '2026-11-24 14:05' }
-        ]
-      }
-    },
-    {
-      id: '105', type: '三人战队开黑房',
-      todayDayPrice: 398, maxCheckInDays: 1, todayHourPrice: 168, defaultDayPrice: 398, defaultHourPrice: 168,
-      otaBottomRef: 348, status: 'occupied',
-      pc: { cpu: 'i7-14700KF', gpu: 'RTX 4070 Ti', monitor: 'ROG 27寸 2K 240Hz', ram: '32GB DDR5' },
-      stay: {
-        guestName: '黄忠', idCard: '530381199402198810', phone: '15087488810',
-        payMode: 'offline', channel: '现金', orderNo: '',
-        stayType: 'day', days: 1, fee: 280, origDailyPaid: 280, deposit: 200,
-        checkinTime: '2026-11-25 09:15', checkoutTime: '2026-11-26 12:00',
-        peripherals: []
-      }
-    },
-    {
-      id: '106', type: '五黑至尊包厢',
-      todayDayPrice: 528, maxCheckInDays: 1, todayHourPrice: 228, defaultDayPrice: 528, defaultHourPrice: 228,
-      otaBottomRef: 468, status: 'occupied',
-      pc: { cpu: 'i9-14900K', gpu: 'RTX 4080 Super', monitor: '外星人 27寸 360Hz', ram: '64GB DDR5' },
-      stay: {
-        guestName: '马超', idCard: '530103200107079914', phone: '13688719914',
-        payMode: 'offline', channel: '微信收款码', orderNo: '',
-        stayType: 'day', days: 4, fee: 2112, origDailyPaid: 528, deposit: 300,
-        checkinTime: '2026-11-24 14:00', checkoutTime: '2026-11-28 12:00',
-        peripherals: [
-          { periId: 'p23', name: '极度未知 飓风2 电竞耳机', qty: 2, rentFee: 8, time: '2026-11-24 14:10' }
-        ]
-      }
-    },
-    {
-      id: '107', type: '疾风双人电竞房',
-      todayDayPrice: 268, maxCheckInDays: 1, todayHourPrice: 108, defaultDayPrice: 268, defaultHourPrice: 108,
-      otaBottomRef: 228, status: 'reserved',
-      pc: { cpu: 'R7-7800X3D', gpu: 'RTX 4070 12G', monitor: 'AOC 27寸 2K 240Hz', ram: '32GB DDR5' },
-      stay: {
-        guestName: '关羽', idCard: '530322199211093312', phone: '13787430107',
-        payMode: 'offline', channel: '微信收款码', orderNo: '',
-        stayType: 'day', days: 1, fee: 268, origDailyPaid: 268, deposit: 200,
-        checkinTime: '2026-11-25 14:00(预抵)', checkoutTime: '2026-11-26 12:00',
-        peripherals: []
-      }
-    },
-    {
-      id: '108', type: '五黑至尊包厢',
-      todayDayPrice: 528, maxCheckInDays: 1, todayHourPrice: 228, defaultDayPrice: 528, defaultHourPrice: 228,
-      otaBottomRef: 468, status: 'cleaning',
-      pc: { cpu: 'i9-14900K', gpu: 'RTX 4080 Super', monitor: '外星人 27寸 360Hz', ram: '64GB DDR5' },
-      stay: null
-    }
-  ],
-  ledger: [
-    { id: 'L01', date: '2026-11-25', time: '09:15', shift: '早班', roomId: '105', guestName: '黄忠', payMode: 'offline', channel: '现金', bizType: 'checkin', desc: '全日房 1天', stdFee: 398, fee: 280, deposit: 200, cashier: '张悦', auditStatus: 'pending', locked: false, shiftTransfer: '' },
-    { id: 'L02', date: '2026-11-25', time: '11:20', shift: '早班', roomId: '102', guestName: '刘备', payMode: 'online', channel: '美团', bizType: 'checkin', desc: '全日房 1天 (平台底价)', stdFee: 288, fee: 248, deposit: 200, cashier: '张悦', auditStatus: 'auto_exempt', locked: false, shiftTransfer: '' },
-    { id: 'L03', date: '2026-11-25', time: '12:45', shift: '早班', roomId: '103', guestName: '张飞', payMode: 'offline', channel: '微信收款码', bizType: 'checkin', desc: '全日房 1天', stdFee: 288, fee: 288, deposit: 200, cashier: '张悦', auditStatus: 'pending', locked: false, shiftTransfer: '' },
-    { id: 'L04', date: '2026-11-24', time: '22:10', shift: '夜班', roomId: '106', guestName: '马超', payMode: 'offline', channel: '微信收款码', bizType: 'checkin', desc: '全日房 4天预付', stdFee: 2112, fee: 2112, deposit: 300, cashier: '王强', auditStatus: 'pending', locked: true, shiftTransfer: '' }
-  ],
-  recoveryOrders: [],
-  handoverSnapshots: [
-    {
-      id: 'HO-20261124-N',
-      pushTime: '2026-11-25 08:00',
-      date: '2026-11-24',
-      shift: '夜班',
-      cashier: '王强',
-      offlineNet: 2112,
-      onlineTotal: 0,
-      depositNet: 300,
-      roomCount: 1,
-      lockedLedgerIds: ['L04'],
-      auditStatus: 'pending',
-      auditor: '',
-      auditTime: '',
-      auditNote: ''
-    }
-  ],
-  modalCtx: {
-    ciMode: 'offline',
-    ciPresetOrderNo: '',
-    pmRoomId: '',
-    swRoomId: '',
-    swCalcResult: null,
-    extRoomId: '',
-    coRoomId: '',
-    adjPeriId: '',
-    editPeriId: '',
-    repairPeriId: '',
-    finishRepairId: '',
-    rejectHoId: '',
-    transferLedgerId: '',
-    transferDir: 'next',
-    auditRejectLedgerId: '',
-    dmgToFactoryId: '',
-    newPeriUploadedImg: '',
-    editPeriUploadedImg: ''
-  }
-};
 
 function showToast(msg, type = 'info') {
   const wrap = document.getElementById('toastWrap');
@@ -3365,13 +3052,13 @@ function switchCheckInPayMode(mode) {
 
   const feeInput = document.getElementById('ciRoomFee');
   if (isOff) {
-    document.getElementById('ciFeeLabel').textContent = '线下总房费（按今日房价/今日钟点房价自动计算 · 不可修改）';
+    document.getElementById('ciFeeLabel').textContent = '线下总房费';
     feeInput.readOnly = true;
     document.getElementById('ciDuplicateWarn').style.display = 'none';
     document.getElementById('ciSubmitBtn').disabled = false;
     recalcCheckInFee();
   } else {
-    document.getElementById('ciFeeLabel').textContent = '平台结算底价（自动锁定）';
+    document.getElementById('ciFeeLabel').textContent = '平台结算底价';
     feeInput.readOnly = true;
     onOnlinePlatformChange();
   }
@@ -3411,7 +3098,7 @@ function recalcCheckInFee() {
       const days = Math.max(1, Math.min(maxDays, parseInt(document.getElementById('ciDays').value, 10) || 1));
       document.getElementById('ciDays').value = days;
       document.getElementById('ciRoomFee').value = days * room.todayDayPrice;
-      document.getElementById('ciExpectedCheckout').value = addDaysStr(SYS_TODAY_STR, days) + ' 12:00';
+      document.getElementById('ciExpectedCheckout').value = addDaysStr(SYS_TODAY_STR, days) + ' 14:00';
     } else {
       const hrs = parseInt(document.getElementById('ciHours').value, 10) || 3;
       const mult = hrs === 3 ? 1 : (hrs === 4 ? 1.3 : 1.6);
@@ -3450,7 +3137,7 @@ function onSelectPlatformOrder() {
 
   document.getElementById('ciOnlineOrderNo').value = ord.orderNo;
   document.getElementById('ciRoomFee').value = ord.bottomPrice;
-  document.getElementById('ciExpectedCheckout').value = addDaysStr(SYS_TODAY_STR, ord.days) + ' 12:00';
+  document.getElementById('ciExpectedCheckout').value = addDaysStr(SYS_TODAY_STR, ord.days) + ' 14:00';
   if (!document.getElementById('ciGuestName').value) {
     document.getElementById('ciGuestName').value = ord.guestName;
     document.getElementById('ciGuestIdCard').value = ord.idCard;
@@ -3577,6 +3264,7 @@ function submitCheckIn() {
     shift: state.currentShiftName,
     roomId,
     guestName,
+    idCard,
     payMode: mode,
     channel,
     bizType: 'checkin',
@@ -3590,7 +3278,7 @@ function submitCheckIn() {
   });
 
   closeModal('checkInModal');
-  showToast(`${roomId}房办理入住成功！今日房价/钟点房价已恢复默认，最大入住天数恢复为 1`, 'success');
+  showToast(`${roomId}房办理入住成功！`, 'success');
   renderAll();
 }
 
@@ -3720,14 +3408,14 @@ function handleRoomPeripheralAction(idx, type) {
       guestName: room.stay.guestName,
       periName: item.name,
       qty,
-      action: '损坏报损（不扣押金）',
+      action: '损坏报损',
       amount: 0,
       operator: state.currentUserLabel
     });
     item.qty -= qty;
     if (item.qty <= 0) room.stay.peripherals.splice(idx, 1);
     reconcileAllPeripherals();
-    showToast(`已报损 ${qty} 件【${item.name}】（不扣押金，剩余 ${Math.max(0, item.qty)} 件仍在借），已加入报损清单`, 'warn');
+    showToast(`已报损 ${qty} 件【${item.name}】（剩余 ${Math.max(0, item.qty)} 件仍在借）`, 'warn');
   }
 
   renderPeripheralModalContent();
@@ -3776,7 +3464,7 @@ function addMultiPeripheralToRoom() {
       guestName: room.stay.guestName,
       periName: inv.name,
       qty,
-      action: waiveRent ? '借出(免租金)' : '借出',
+      action: waiveRent ? '借出' : '借出',
       amount: waiveRent ? 0 : qty * inv.rentFee,
       operator: state.currentUserLabel
     });
@@ -3784,7 +3472,7 @@ function addMultiPeripheralToRoom() {
   }
 
   reconcileAllPeripherals();
-  showToast(`已为 ${room.id}房 一次性借出 ${addedKinds} 种外设${waiveRent ? '（已免租金）' : ''}`, 'success');
+  showToast(`已为 ${room.id}房 一次性借出 ${addedKinds} 种外设${waiveRent ? '' : ''}`, 'success');
   renderPeripheralModalContent();
   renderAll();
 }
@@ -3814,8 +3502,8 @@ function openSwapRoomModal(roomId) {
   document.getElementById('swSpecialOnlineRefund').checked = false;
 
   const totalDays = s.stayType === 'hour' ? 1 : Math.max(1, s.days || 1);
-  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T12:00:00');
-  const todayDate = new Date(SYS_TODAY_STR + 'T12:00:00');
+  const inDate = new Date(s.checkinTime.slice(0, 10) + 'T14:00:00');
+  const todayDate = new Date(SYS_TODAY_STR + 'T14:00:00');
   let autoUsed = Math.max(0, Math.round((todayDate - inDate) / 86400000));
   if (autoUsed >= totalDays) autoUsed = Math.max(0, totalDays - 1);
 
@@ -4037,7 +3725,7 @@ function recalcExtend() {
   const days = Math.max(1, parseInt(document.getElementById('extDays').value, 10) || 1);
   const origDate = room.stay.checkoutTime.slice(0, 10);
   const newDate = addDaysStr(origDate, days);
-  document.getElementById('extNewCheckout').value = newDate + ' 12:00';
+  document.getElementById('extNewCheckout').value = newDate + ' 14:00';
   document.getElementById('extFee').value = days * room.todayDayPrice;
   document.getElementById('extFee').readOnly = (state.role !== 'admin');
 }
@@ -4236,6 +3924,7 @@ function renderPeripheralsPage() {
             <tr>
               <th>位置</th>
               <th>客人</th>
+              <th>身份证号码</th>
               <th>电话</th>
               <th>外设图示/名称</th>
               <th>在借数量</th>
@@ -4250,6 +3939,7 @@ function renderPeripheralsPage() {
               <tr>
                 <td><strong>${b.placeLabel}</strong></td>
                 <td>${b.guestName}</td>
+                <td>${b.idCard}</td>
                 <td>${b.phone}</td>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
@@ -5255,13 +4945,14 @@ function renderCafeRentPage() {
     </div>
 
     <div class="card">
-      <div style="font-weight:700;font-size:15px;margin-bottom:10px;">网吧当前在借外设列表（支持按件数归还）</div>
+      <div style="font-weight:700;font-size:15px;margin-bottom:10px;">网吧当前在借外设列表</div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
               <th>机号</th>
               <th>客人</th>
+              <th>身份证号码</th>
               <th>电话</th>
               <th>外设图示/名称</th>
               <th>在借数量</th>
@@ -5276,6 +4967,7 @@ function renderCafeRentPage() {
               <tr>
                 <td><strong>${cf.machineNo}</strong></td>
                 <td>${cf.guestName}</td>
+                <td>${cf.idCard}</td>
                 <td>${cf.phone}</td>
                 <td>
                   <div style="display:flex;align-items:center;gap:8px;">
@@ -5494,6 +5186,7 @@ function renderHandoverPage() {
     <tr>
       <td><strong>${l.roomId}房</strong></td>
       <td>${l.guestName}</td>
+      <td>${l.idCard}</td>
       <td><span class="badge ${getChannelBadgeClass(l.channel)}">${l.payMode === 'offline' ? '线下·' + l.channel : '线上·' + l.channel}</span></td>
       <td>${l.desc}</td>
       <td><strong style="color:${l.fee < 0 ? '#DC2626' : '#0F172A'}">${l.fee < 0 ? '-¥' + Math.abs(l.fee) : '¥' + l.fee}</strong></td>
@@ -5711,6 +5404,7 @@ function renderStatsPage() {
               <th>班次</th>
               <th>房号</th>
               <th>客人</th>
+              <th>身份证号码</th>
               <th>渠道</th>
               <th>明细</th>
               <th>金额</th>
@@ -5732,6 +5426,7 @@ function renderStatsPage() {
                   </td>
                   <td><strong>${l.roomId}房</strong></td>
                   <td>${l.guestName}</td>
+                  <td>${l.idCard}</td>
                   <td><span class="badge ${getChannelBadgeClass(l.channel)}">${l.payMode === 'offline' ? '线下·' + l.channel : '线上·' + l.channel}</span></td>
                   <td>${l.desc}</td>
                   <td><strong style="color:${l.fee < 0 ? '#DC2626' : '#0F172A'}">${l.fee < 0 ? '-¥' + Math.abs(l.fee) : '¥' + l.fee}</strong></td>
@@ -5838,6 +5533,7 @@ function renderAuditPage() {
               <th>时间/班次</th>
               <th>房号</th>
               <th>客人</th>
+              <th>身份证号码</th>
               <th>渠道</th>
               <th>业务</th>
               <th>标准/实收</th>
@@ -5860,6 +5556,7 @@ function renderAuditPage() {
                   <td>${formatFullDateTimeStr(l.date + ' ' + l.time)} · ${l.shift}</td>
                   <td><strong>${l.roomId}房</strong></td>
                   <td>${l.guestName}</td>
+                  <td>${l.idCard}</td>
                   <td><span class="badge ch-offline">${l.channel}</span></td>
                   <td>${l.desc}</td>
                   <td>¥${l.stdFee} / <strong style="color:${l.fee < 0 ? '#DC2626' : '#0F172A'}">${l.fee < 0 ? '-¥' + Math.abs(l.fee) : '¥' + l.fee}</strong></td>
@@ -5884,6 +5581,7 @@ function renderAuditPage() {
             <tr>
               <th>单号</th>
               <th>房号/客人</th>
+              <th>身份证号码</th>
               <th>原流水</th>
               <th>补差金额</th>
               <th>驳回原因</th>
@@ -5896,6 +5594,7 @@ function renderAuditPage() {
               <tr>
                 <td><strong>${ro.id}</strong></td>
                 <td>${ro.roomId}房 · ${ro.guestName}</td>
+                <td>${ro.idCard}</td>
                 <td>${ro.origLedgerId} (${ro.origDesc})</td>
                 <td><strong style="color:#DC2626;">+¥${ro.diffAmount}</strong></td>
                 <td>${ro.reason}</td>
@@ -5993,7 +5692,7 @@ function renderPricingPage() {
             ${state.rooms.map(r => `
               <tr>
                 <td><strong>${r.id}</strong></td>
-                <td>${r.type}</td>
+                <td style="width:125px;">${r.type}</td>
                 <td style="width:120px;"><input type="number" id="todayDay_${r.id}" value="${r.todayDayPrice}" ${isAdmin ? '' : 'disabled'}></td>
                 <td style="width:115px;"><input type="number" min="1" max="60" id="maxDays_${r.id}" value="${r.maxCheckInDays}" ${isAdmin ? '' : 'disabled'}></td>
                 <td style="width:125px;"><input type="number" id="todayHour_${r.id}" value="${r.todayHourPrice}" ${isAdmin ? '' : 'disabled'}></td>
@@ -6269,10 +5968,10 @@ function renderSettingsPage() {
         </div>
         <div class="form-group">
           <label class="form-label">初始登录密码 *</label>
-          <input type="password" id="newAccountPassword" placeholder="至少6位密码" ${isAdmin ? '' : 'disabled'}>
+          <input type="password" id="newAccountPassword" placeholder="输入密码" ${isAdmin ? '' : 'disabled'}>
         </div>
         <div class="form-group">
-          <button type="button" class="btn-primary" ${isAdmin ? '' : 'disabled'} onclick="submitCreateDbUser()">+ 新增数据库账号</button>
+          <button type="button" class="btn-primary" ${isAdmin ? '' : 'disabled'} onclick="submitCreateDbUser()">+ 新增账号</button>
         </div>
       </div>
     </div>
