@@ -3574,7 +3574,7 @@ function openSwapRoomModal(roomId) {
   document.getElementById('swTitle').textContent = `${roomId}房（${s.guestName}）· 中途换房与差价核算`;
 
   document.getElementById('swTargetRoomId').innerHTML = freeRooms.map(r =>
-    `<option value="${r.id}">${r.id}房 · ${r.type} (今日¥${r.todayDayPrice}/天 · 默认¥${r.defaultDayPrice})</option>`
+    `<option value="${r.id}">${r.id}房 · ${r.type} (今日¥${r.todayDayPrice}/天)</option>`
   ).join('');
 
   document.getElementById('swChannel').innerHTML = state.offlineChannels.filter(c => c.enabled).map(c =>
@@ -3806,7 +3806,7 @@ function recalcExtend() {
   const days = Math.max(1, parseInt(document.getElementById('extDays').value, 10) || 1);
   const origDate = room.stay.checkoutTime.slice(0, 10);
   const newDate = addDaysStr(origDate, days);
-  document.getElementById('extNewCheckout').value = newDate + ' 12:00';
+  document.getElementById('extNewCheckout').value = newDate + ' 14:00';
   document.getElementById('extFee').value = days * room.todayDayPrice;
   document.getElementById('extFee').readOnly = (state.role !== 'admin');
 }
