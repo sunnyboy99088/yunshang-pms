@@ -2474,11 +2474,21 @@ function clampPmItemQty(idx) {
 }
 
 function stepExtendDays(delta) {
+  const room = state.rooms.find(r => r.id === state.modalCtx.extRoomId);
   const inp = document.getElementById('extDays');
   const minVal = parseInt(inp.min, 10) || 1;
-  const maxVal = parseInt(inp.max, 10) || 60;
+  const maxAllowed = getEffectiveMaxCheckInDays(room);
+  inp.max = maxAllowed;
   const cur = parseInt(inp.value, 10) || minVal;
-  inp.value = Math.max(minVal, Math.min(maxVal, cur + delta));
+  const next = cur + delta;
+  if (next > maxAllowed) {
+    if (room && Number(room.todayDayPrice) < Number(room.defaultDayPrice)) {
+      showToast(`今日房价低于默认房价，最大续住天数为 ${maxAllowed} 天`, 'warn');
+    } else {
+      showToast(`最大续住天数为 ${maxAllowed} 天`, 'warn');
+    }
+  }
+  inp.value = Math.max(minVal, Math.min(maxAllowed, next));
   recalcExtend();
 }
 
