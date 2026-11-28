@@ -2019,6 +2019,8 @@ function togglePeriZoomById(periId, e) {
   }
 }
 
+// 房间价格与最大入住天数规则：
+// todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
 // 生成 52 款涵盖多分类的电竞外设台账
 function buildInitialPeripherals() {
   const catalog = [];
@@ -2036,158 +2038,7 @@ function buildInitialPeripherals() {
   }));
 }
 
-let state = {
-  isLoggedIn: false,
-  role: 'cashier',
-  currentUserLabel: '收银员：张悦',
-  currentPage: 'rooms',
-  roomFilter: 'ALL',
-  periCategoryFilter: 'ALL',
-  ciPeriCategoryFilter: 'ALL',
-  pmPeriCategoryFilter: 'ALL',
-  cafePeriCategoryFilter: 'ALL',
-  periSearchQuery: '',
-  periFlowTab: 'borrow',
-  currentShiftName: '早班',
-  currentCashier: '张悦',
-  policeAuto: {
-    enabled: true,
-    autoOnOpen: true,
-    intervalSec: 3,
-    skipEyeMask: true,
-    portalUrl: 'https://yn.lgy.gaj.gov.cn/hotel/guest-list'
-  },
-  policeWebRegistry: {
-    '101': { name: '赵云', idCard: '530322199803124518', phone: '13987420101', regTime: '13:26' },
-    '103': { name: '张飞', idCard: '530322199508151234', phone: '13887410103', regTime: '13:28' },
-    '107': { name: '关羽', idCard: '530322199211093312', phone: '13787430107', regTime: '13:22' }
-  },
-  offlineChannels: [
-    { id: 'wx', name: '微信收款码', enabled: true },
-    { id: 'ali', name: '支付宝收款码', enabled: true },
-    { id: 'cash', name: '现金', enabled: true },
-    { id: 'pos', name: 'POS刷卡/银行卡', enabled: true }
-  ],
-  otaPlatforms: [
-    { id: 'douyin', name: '抖音来客', enabled: true },
-    { id: 'meituan', name: '美团', enabled: true },
-    { id: 'ctrip', name: '携程', enabled: true },
-    { id: 'amap', name: '高德酒店', enabled: true }
-  ],
-  peripheralCategories: ['鼠标', '键盘', '耳机', '手柄', '麦克风', '外设配件'],
-  peripherals: buildInitialPeripherals(),
-  damageList: [
-    {
-      id: 'DMG01',
-      periId: 'p3',
-      periName: '卓威 EC2-CW 无线鼠标',
-      qty: 1,
-      sourceLabel: '酒店 102房',
-      guestName: '刘备',
-      time: '2026-11-25 11:40',
-      operator: '收银员：张悦',
-      status: 'pending',
-      handleNote: ''
-    }
-  ],
-  repairItems: [
-    {
-      id: 'RP01',
-      periId: 'p1',
-      periName: '罗技 GPW2 无线鼠标',
-      qty: 1,
-      fault: '中键微动双击，送厂保修',
-      contact: '罗技售后陈工 13800138001',
-      address: '售后服务中心B座402',
-      sendTime: '2026-11-24 15:20',
-      operator: '管理员：李店长'
-    }
-  ],
-  cafeRentals: [
-    {
-      id: 'CF01',
-      guestName: '韩信',
-      idCard: '530302199904121139',
-      phone: '13887451120',
-      machineNo: 'A18',
-      periId: 'p1',
-      periName: '罗技 GPW2 无线鼠标',
-      qty: 2,
-      rentFee: 20,
-      deposit: 0,
-      channel: '微信收款码',
-      rentTime: '2026-11-25 12:15',
-      operator: '收银员：张悦'
-    }
-  ],
-  peripheralBorrowLogs: [
-    { id: 'PB01', time: '2026-11-25 12:15', targetType: '网吧', targetNo: 'A18机', guestName: '韩信', periName: '罗技 GPW2 无线鼠标', qty: 2, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB02', time: '2026-11-25 11:20', targetType: '酒店', targetNo: '102房', guestName: '刘备', periName: '卓威 EC2-CW 无线鼠标', qty: 2, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB03', time: '2026-11-24 14:05', targetType: '酒店', targetNo: '104房', guestName: '黄盖', periName: 'Wooting 60HE 磁轴键盘', qty: 1, action: '借出', amount: 20, operator: '收银员：张悦' },
-    { id: 'PB04', time: '2026-11-24 14:10', targetType: '酒店', targetNo: '106房', guestName: '马超', periName: '极度未知 飓风2 电竞耳机', qty: 2, action: '借出', amount: 16, operator: '收银员：张悦' }
-  ],
-  peripheralStockLogs: [
-    { id: 'PS01', time: '2026-11-24 15:20', periName: '罗技 GPW2 无线鼠标', action: '送售后维修 (中键微动双击 · 罗技售后陈工 13800138001)', deltaQty: 0, totalAfter: 8, operator: '管理员：李店长' },
-    { id: 'PS02', time: '2026-11-20 09:00', periName: '全品类外设台账', action: '初始化外设库存 (52款)', deltaQty: 52, totalAfter: 52, operator: '管理员：李店长' }
-  ],
-  onlineOrders: [
-    { orderNo: 'MT202611250081', platform: '美团', guestName: '陈浩然', idCard: '530302199804121139', phone: '13708742210', roomTypeHint: '豪华双人开黑房', days: 1, bottomPrice: 248, used: false, usedRoom: '' },
-    { orderNo: 'XC202611250192', platform: '携程', guestName: '王思聪', idCard: '530381200009183312', phone: '13987498812', roomTypeHint: '五黑至尊包厢', days: 2, bottomPrice: 936, used: false, usedRoom: '' },
-    { orderNo: 'DY202611250305', platform: '抖音来客', guestName: '孙悟空', idCard: '530322199706015517', phone: '15887435517', roomTypeHint: '疾风双人电竞房', days: 2, bottomPrice: 436, used: false, usedRoom: '' },
-    { orderNo: 'GD202611250411', platform: '高德酒店', guestName: '李白', idCard: '530302200202147711', phone: '18787027711', roomTypeHint: '竞技大床房', days: 1, bottomPrice: 198, used: false, usedRoom: '' },
-    { orderNo: 'MT202611250019', platform: '美团', guestName: '刘备', idCard: '530302199605201215', phone: '13887401215', roomTypeHint: '豪华双人开黑房', days: 1, bottomPrice: 248, used: true, usedRoom: '102' }
-  ],
-  // 房间价格与最大入住天数规则：
-  // todayDayPrice（今日房价）、maxCheckInDays（最大入住天数，默认1）、todayHourPrice（今日钟点房价）、defaultDayPrice（默认房价）、defaultHourPrice（默认钟点房价）
-  rooms: [
 
-  ],
-  ledger: [
-    { id: 'L01', date: '2026-11-25', time: '09:15', shift: '早班', roomId: '105', guestName: '黄忠', payMode: 'offline', channel: '现金', bizType: 'checkin', desc: '全日房 1天', stdFee: 398, fee: 280, deposit: 200, cashier: '张悦', auditStatus: 'pending', locked: false, shiftTransfer: '' },
-    { id: 'L02', date: '2026-11-25', time: '11:20', shift: '早班', roomId: '102', guestName: '刘备', payMode: 'online', channel: '美团', bizType: 'checkin', desc: '全日房 1天 (平台底价)', stdFee: 288, fee: 248, deposit: 200, cashier: '张悦', auditStatus: 'auto_exempt', locked: false, shiftTransfer: '' },
-    { id: 'L03', date: '2026-11-25', time: '12:45', shift: '早班', roomId: '103', guestName: '张飞', payMode: 'offline', channel: '微信收款码', bizType: 'checkin', desc: '全日房 1天', stdFee: 288, fee: 288, deposit: 200, cashier: '张悦', auditStatus: 'pending', locked: false, shiftTransfer: '' },
-    { id: 'L04', date: '2026-11-24', time: '22:10', shift: '夜班', roomId: '106', guestName: '马超', payMode: 'offline', channel: '微信收款码', bizType: 'checkin', desc: '全日房 4天预付', stdFee: 2112, fee: 2112, deposit: 300, cashier: '王强', auditStatus: 'pending', locked: true, shiftTransfer: '' }
-  ],
-  recoveryOrders: [],
-  handoverSnapshots: [
-    {
-      id: 'HO-20261124-N',
-      pushTime: '2026-11-25 08:00',
-      date: '2026-11-24',
-      shift: '夜班',
-      cashier: '王强',
-      offlineNet: 2112,
-      onlineTotal: 0,
-      depositNet: 300,
-      roomCount: 1,
-      lockedLedgerIds: ['L04'],
-      auditStatus: 'pending',
-      auditor: '',
-      auditTime: '',
-      auditNote: ''
-    }
-  ],
-  modalCtx: {
-    ciMode: 'offline',
-    ciPresetOrderNo: '',
-    pmRoomId: '',
-    swRoomId: '',
-    swCalcResult: null,
-    extRoomId: '',
-    coRoomId: '',
-    adjPeriId: '',
-    editPeriId: '',
-    repairPeriId: '',
-    finishRepairId: '',
-    rejectHoId: '',
-    transferLedgerId: '',
-    transferDir: 'next',
-    auditRejectLedgerId: '',
-    dmgToFactoryId: '',
-    newPeriUploadedImg: '',
-    editPeriUploadedImg: ''
-  }
-};
 
 function showToast(msg, type = 'info') {
   const wrap = document.getElementById('toastWrap');
